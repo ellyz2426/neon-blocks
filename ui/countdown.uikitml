@@ -1,0 +1,21 @@
+<style>
+  .cd-bg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 2;
+    padding-bottom: 2;
+    padding-left: 4;
+    padding-right: 4;
+    background-color: rgba(0,0,0,0.6);
+    border-radius: 2;
+  }
+  .cd-text {
+    font-size: 8;
+    color: #00ffff;
+    font-weight: bold;
+  }
+</style>
+<div class="cd-bg">
+  <span id="cd-value" class="cd-text">3</span>
+</div>

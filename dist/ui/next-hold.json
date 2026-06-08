@@ -1,0 +1,249 @@
+{
+  "element": {
+    "type": "container",
+    "sourceTag": "div",
+    "children": [
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "NEXT"
+        ],
+        "properties": {
+          "class": "label"
+        },
+        "dataUid": "uid-2"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "-"
+        ],
+        "properties": {
+          "id": "next-1",
+          "class": "piece-name"
+        },
+        "dataUid": "uid-3"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "-"
+        ],
+        "properties": {
+          "id": "next-2",
+          "class": "piece-name"
+        },
+        "dataUid": "uid-4"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "-"
+        ],
+        "properties": {
+          "id": "next-3",
+          "class": "piece-name"
+        },
+        "dataUid": "uid-5"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "HOLD"
+        ],
+        "properties": {
+          "class": "hold-label"
+        },
+        "dataUid": "uid-6"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "-"
+        ],
+        "properties": {
+          "id": "hold-piece",
+          "class": "hold-name"
+        },
+        "dataUid": "uid-7"
+      }
+    ],
+    "properties": {
+      "class": "next-panel"
+    },
+    "dataUid": "uid-1"
+  },
+  "classes": {
+    "next-panel": {
+      "content": {
+        "display": "flex",
+        "flexDirection": "column",
+        "alignItems": "center",
+        "paddingTop": "1",
+        "paddingBottom": "1",
+        "paddingLeft": "1.5",
+        "paddingRight": "1.5",
+        "backgroundColor": "rgba(0,0,0,0.7)",
+        "borderColor": "#00ffff",
+        "borderWidth": "0.08",
+        "borderRadius": 0.6
+      }
+    },
+    "label": {
+      "content": {
+        "fontSize": "1.2",
+        "color": "#888888",
+        "marginBottom": "0.5"
+      }
+    },
+    "piece-name": {
+      "content": {
+        "fontSize": "1.8",
+        "color": "#00ffff",
+        "fontWeight": "bold"
+      }
+    },
+    "hold-label": {
+      "content": {
+        "fontSize": "1.2",
+        "color": "#ffc800",
+        "marginTop": "1"
+      }
+    },
+    "hold-name": {
+      "content": {
+        "fontSize": "1.8",
+        "color": "#ffc800",
+        "fontWeight": "bold"
+      }
+    }
+  },
+  "ranges": {
+    "next-panel": {
+      "start": {
+        "line": 1,
+        "column": 2
+      },
+      "end": {
+        "line": 1,
+        "column": 13
+      }
+    },
+    "label": {
+      "start": {
+        "line": 14,
+        "column": 2
+      },
+      "end": {
+        "line": 14,
+        "column": 8
+      }
+    },
+    "piece-name": {
+      "start": {
+        "line": 19,
+        "column": 2
+      },
+      "end": {
+        "line": 19,
+        "column": 13
+      }
+    },
+    "hold-label": {
+      "start": {
+        "line": 24,
+        "column": 2
+      },
+      "end": {
+        "line": 24,
+        "column": 13
+      }
+    },
+    "hold-name": {
+      "start": {
+        "line": 29,
+        "column": 2
+      },
+      "end": {
+        "line": 29,
+        "column": 12
+      }
+    },
+    "uid-1": {
+      "start": {
+        "line": 35,
+        "column": 0
+      },
+      "end": {
+        "line": 42,
+        "column": 6
+      }
+    },
+    "uid-2": {
+      "start": {
+        "line": 36,
+        "column": 2
+      },
+      "end": {
+        "line": 36,
+        "column": 33
+      }
+    },
+    "uid-3": {
+      "start": {
+        "line": 37,
+        "column": 2
+      },
+      "end": {
+        "line": 37,
+        "column": 47
+      }
+    },
+    "uid-4": {
+      "start": {
+        "line": 38,
+        "column": 2
+      },
+      "end": {
+        "line": 38,
+        "column": 47
+      }
+    },
+    "uid-5": {
+      "start": {
+        "line": 39,
+        "column": 2
+      },
+      "end": {
+        "line": 39,
+        "column": 47
+      }
+    },
+    "uid-6": {
+      "start": {
+        "line": 40,
+        "column": 2
+      },
+      "end": {
+        "line": 40,
+        "column": 38
+      }
+    },
+    "uid-7": {
+      "start": {
+        "line": 41,
+        "column": 2
+      },
+      "end": {
+        "line": 41,
+        "column": 50
+      }
+    }
+  }
+}

@@ -1,0 +1,120 @@
+<style>
+  .menu-bg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 4;
+    padding-bottom: 4;
+    padding-left: 6;
+    padding-right: 6;
+    background-color: rgba(0,0,0,0.85);
+    border-color: #00ffff;
+    border-width: 0.15;
+    border-radius: 1.5;
+  }
+  .title {
+    font-size: 5;
+    color: #00ffff;
+    font-weight: bold;
+    margin-bottom: 1;
+  }
+  .subtitle {
+    font-size: 1.8;
+    color: #888888;
+    margin-bottom: 3;
+  }
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28;
+    padding-top: 1.2;
+    padding-bottom: 1.2;
+    margin-bottom: 1;
+    background-color: rgba(0,255,255,0.12);
+    border-color: #00ffff;
+    border-width: 0.08;
+    border-radius: 0.8;
+    cursor: pointer;
+  }
+  .btn-text {
+    font-size: 2;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .btn-yellow {
+    background-color: rgba(255,200,0,0.12);
+    border-color: #ffc800;
+  }
+  .btn-yellow .btn-text, .btn-yellow-text {
+    color: #ffc800;
+  }
+  .btn-green {
+    background-color: rgba(0,255,100,0.12);
+    border-color: #00ff64;
+  }
+  .btn-green-text {
+    color: #00ff64;
+  }
+  .btn-magenta {
+    background-color: rgba(255,0,200,0.12);
+    border-color: #ff00c8;
+  }
+  .btn-magenta-text {
+    color: #ff00c8;
+  }
+  .btn-orange {
+    background-color: rgba(255,140,0,0.12);
+    border-color: #ff8c00;
+  }
+  .btn-orange-text {
+    color: #ff8c00;
+  }
+  .level-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 2;
+  }
+  .level-text {
+    font-size: 1.5;
+    color: #aaaaaa;
+    margin-right: 1;
+  }
+  .level-val {
+    font-size: 1.5;
+    color: #00ffff;
+    font-weight: bold;
+  }
+</style>
+<div class="menu-bg">
+  <span class="title">NEON BLOCKS</span>
+  <span class="subtitle">FALLING BLOCK PUZZLE</span>
+  <div class="level-row">
+    <span class="level-text">Lv.</span>
+    <span id="player-level" class="level-val">1</span>
+    <span class="level-text"> - </span>
+    <span id="player-title" class="level-val">Novice</span>
+  </div>
+  <div id="btn-play" class="btn" cursor="pointer">
+    <span class="btn-text">PLAY</span>
+  </div>
+  <div id="btn-scores" class="btn btn-yellow" cursor="pointer">
+    <span class="btn-yellow-text" style="font-size: 2; font-weight: bold;">LEADERBOARD</span>
+  </div>
+  <div id="btn-achievements" class="btn btn-green" cursor="pointer">
+    <span class="btn-green-text" style="font-size: 2; font-weight: bold;">ACHIEVEMENTS</span>
+  </div>
+  <div id="btn-stats" class="btn btn-magenta" cursor="pointer">
+    <span class="btn-magenta-text" style="font-size: 2; font-weight: bold;">STATISTICS</span>
+  </div>
+  <div id="btn-skins" class="btn btn-orange" cursor="pointer">
+    <span class="btn-orange-text" style="font-size: 2; font-weight: bold;">BLOCK SKINS</span>
+  </div>
+  <div id="btn-settings" class="btn" cursor="pointer">
+    <span class="btn-text">SETTINGS</span>
+  </div>
+  <div id="btn-help" class="btn" cursor="pointer">
+    <span class="btn-text">HELP</span>
+  </div>
+</div>

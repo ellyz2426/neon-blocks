@@ -1,0 +1,66 @@
+<style>
+  .hud-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-top: 0.5;
+    padding-bottom: 0.5;
+    padding-left: 1.5;
+    padding-right: 1.5;
+    background-color: rgba(0,0,0,0.7);
+    border-color: #00ffff;
+    border-width: 0.08;
+    border-radius: 0.6;
+  }
+  .cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 1;
+    margin-right: 1;
+  }
+  .label {
+    font-size: 1;
+    color: #888888;
+  }
+  .value {
+    font-size: 2;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .sep {
+    font-size: 1.5;
+    color: #333333;
+  }
+</style>
+<div class="hud-row">
+  <div class="cell">
+    <span class="label">SCORE</span>
+    <span id="hud-score" class="value">0</span>
+  </div>
+  <span class="sep">|</span>
+  <div class="cell">
+    <span class="label">LEVEL</span>
+    <span id="hud-level" class="value">1</span>
+  </div>
+  <span class="sep">|</span>
+  <div class="cell">
+    <span class="label">LINES</span>
+    <span id="hud-lines" class="value">0</span>
+  </div>
+  <span class="sep">|</span>
+  <div class="cell">
+    <span class="label">COMBO</span>
+    <span id="hud-combo" class="value">0</span>
+  </div>
+  <span class="sep">|</span>
+  <div class="cell">
+    <span class="label">TIME</span>
+    <span id="hud-time" class="value">0:00</span>
+  </div>
+  <span class="sep">|</span>
+  <div class="cell">
+    <span class="label">MODE</span>
+    <span id="hud-mode" class="value">MARATHON</span>
+  </div>
+</div>

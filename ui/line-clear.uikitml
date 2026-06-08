@@ -1,0 +1,23 @@
+<style>
+  .line-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.5;
+    padding-bottom: 0.5;
+    padding-left: 2;
+    padding-right: 2;
+    background-color: rgba(0,0,0,0.6);
+    border-color: #ffc800;
+    border-width: 0.1;
+    border-radius: 0.5;
+  }
+  .line-text {
+    font-size: 3;
+    color: #ffc800;
+    font-weight: bold;
+  }
+</style>
+<div class="line-panel">
+  <span id="line-clear-text" class="line-text">TETRIS!</span>
+</div>

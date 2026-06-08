@@ -1,0 +1,106 @@
+<style>
+  .panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 3;
+    padding-bottom: 3;
+    padding-left: 5;
+    padding-right: 5;
+    background-color: rgba(0,0,0,0.85);
+    border-color: #00ffff;
+    border-width: 0.15;
+    border-radius: 1.5;
+  }
+  .heading {
+    font-size: 3.5;
+    color: #ff4444;
+    font-weight: bold;
+    margin-bottom: 1;
+  }
+  .row {
+    display: flex;
+    flex-direction: row;
+    width: 28;
+    justify-content: space-between;
+    margin-bottom: 0.5;
+  }
+  .label {
+    font-size: 1.5;
+    color: #888888;
+  }
+  .value {
+    font-size: 1.5;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22;
+    padding-top: 1.2;
+    padding-bottom: 1.2;
+    margin-top: 0.5;
+    margin-bottom: 0.5;
+    background-color: rgba(0,255,255,0.1);
+    border-color: #00ffff;
+    border-width: 0.08;
+    border-radius: 0.6;
+    cursor: pointer;
+  }
+  .btn-text {
+    font-size: 2;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .btn-quit {
+    background-color: rgba(255,100,100,0.1);
+    border-color: #ff6464;
+  }
+  .quit-text {
+    font-size: 2;
+    color: #ff6464;
+    font-weight: bold;
+  }
+  .xp-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 1;
+    margin-bottom: 1;
+  }
+  .xp-label {
+    font-size: 1.5;
+    color: #ffc800;
+  }
+  .xp-val {
+    font-size: 1.8;
+    color: #ffc800;
+    font-weight: bold;
+    margin-left: 0.5;
+  }
+</style>
+<div class="panel">
+  <span class="heading">GAME OVER</span>
+  <div class="row"><span class="label">Score</span><span id="go-score" class="value">0</span></div>
+  <div class="row"><span class="label">Level</span><span id="go-level" class="value">1</span></div>
+  <div class="row"><span class="label">Lines</span><span id="go-lines" class="value">0</span></div>
+  <div class="row"><span class="label">Max Combo</span><span id="go-combo" class="value">0</span></div>
+  <div class="row"><span class="label">Time</span><span id="go-time" class="value">0:00</span></div>
+  <div class="row"><span class="label">Singles</span><span id="go-singles" class="value">0</span></div>
+  <div class="row"><span class="label">Doubles</span><span id="go-doubles" class="value">0</span></div>
+  <div class="row"><span class="label">Triples</span><span id="go-triples" class="value">0</span></div>
+  <div class="row"><span class="label">Tetrises</span><span id="go-tetrises" class="value">0</span></div>
+  <div class="row"><span class="label">T-Spins</span><span id="go-tspins" class="value">0</span></div>
+  <div class="xp-row">
+    <span class="xp-label">XP Earned: </span>
+    <span id="go-xp" class="xp-val">0</span>
+  </div>
+  <div id="btn-rematch" class="btn" cursor="pointer">
+    <span class="btn-text">REMATCH</span>
+  </div>
+  <div id="btn-menu" class="btn btn-quit" cursor="pointer">
+    <span class="quit-text">MENU</span>
+  </div>
+</div>

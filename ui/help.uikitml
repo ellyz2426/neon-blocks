@@ -1,0 +1,85 @@
+<style>
+  .panel {
+    display: flex;
+    flex-direction: column;
+    padding-top: 2;
+    padding-bottom: 2;
+    padding-left: 4;
+    padding-right: 4;
+    background-color: rgba(0,0,0,0.85);
+    border-color: #00ffff;
+    border-width: 0.15;
+    border-radius: 1.5;
+  }
+  .heading {
+    font-size: 3;
+    color: #00ffff;
+    font-weight: bold;
+    margin-bottom: 1;
+  }
+  .section {
+    font-size: 1.8;
+    color: #ffc800;
+    font-weight: bold;
+    margin-top: 1;
+    margin-bottom: 0.5;
+  }
+  .text {
+    font-size: 1.2;
+    color: #cccccc;
+    margin-bottom: 0.3;
+  }
+  .btn-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20;
+    padding-top: 1;
+    padding-bottom: 1;
+    margin-top: 1.5;
+    background-color: rgba(255,100,100,0.1);
+    border-color: #ff6464;
+    border-width: 0.08;
+    border-radius: 0.6;
+    cursor: pointer;
+  }
+  .back-text { font-size: 1.8; color: #ff6464; font-weight: bold; }
+</style>
+<div class="panel">
+  <span class="heading">HOW TO PLAY</span>
+  <span class="section">Browser Controls</span>
+  <span class="text">Left/Right Arrow: Move piece</span>
+  <span class="text">Down Arrow: Soft drop</span>
+  <span class="text">Space: Hard drop</span>
+  <span class="text">Up Arrow / X: Rotate clockwise</span>
+  <span class="text">Z: Rotate counter-clockwise</span>
+  <span class="text">C: Hold piece</span>
+  <span class="text">Escape: Pause</span>
+  <span class="section">VR Controls</span>
+  <span class="text">Right Thumbstick L/R: Move piece</span>
+  <span class="text">Right Thumbstick Down: Soft drop</span>
+  <span class="text">Right Trigger: Hard drop</span>
+  <span class="text">A Button: Rotate CW</span>
+  <span class="text">B Button: Rotate CCW / Pause</span>
+  <span class="text">Left Trigger: Hold piece</span>
+  <span class="section">Scoring</span>
+  <span class="text">Single: 100 x level</span>
+  <span class="text">Double: 300 x level</span>
+  <span class="text">Triple: 500 x level</span>
+  <span class="text">Tetris (4 lines): 800 x level</span>
+  <span class="text">T-Spin: Bonus points!</span>
+  <span class="text">Back-to-Back: 1.5x multiplier</span>
+  <span class="text">Combos: +50 x combo x level</span>
+  <span class="section">Game Modes</span>
+  <span class="text">Marathon: Endless, level up every 10 lines</span>
+  <span class="text">Sprint 40: Clear 40 lines as fast as possible</span>
+  <span class="text">Ultra: Score as much as you can in 3 minutes</span>
+  <span class="text">Survival: Speed increases constantly</span>
+  <span class="text">Zen: No gravity, place freely</span>
+  <span class="text">Blitz: 1 minute, maximum score</span>
+  <span class="text">Daily: Seeded daily puzzle</span>
+  <span class="text">Cascade: Cleared blocks trigger cascades</span>
+  <div id="btn-back" class="btn-back" cursor="pointer">
+    <span class="back-text">BACK</span>
+  </div>
+</div>

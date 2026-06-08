@@ -1,0 +1,23 @@
+<style>
+  .toast-bg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.5;
+    padding-bottom: 0.5;
+    padding-left: 2;
+    padding-right: 2;
+    background-color: rgba(0,0,0,0.75);
+    border-color: #00ff64;
+    border-width: 0.1;
+    border-radius: 0.5;
+  }
+  .toast-text {
+    font-size: 1.5;
+    color: #00ff64;
+    font-weight: bold;
+  }
+</style>
+<div class="toast-bg">
+  <span id="toast-msg" class="toast-text">Achievement!</span>
+</div>

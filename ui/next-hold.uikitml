@@ -1,0 +1,43 @@
+<style>
+  .next-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1;
+    padding-bottom: 1;
+    padding-left: 1.5;
+    padding-right: 1.5;
+    background-color: rgba(0,0,0,0.7);
+    border-color: #00ffff;
+    border-width: 0.08;
+    border-radius: 0.6;
+  }
+  .label {
+    font-size: 1.2;
+    color: #888888;
+    margin-bottom: 0.5;
+  }
+  .piece-name {
+    font-size: 1.8;
+    color: #00ffff;
+    font-weight: bold;
+  }
+  .hold-label {
+    font-size: 1.2;
+    color: #ffc800;
+    margin-top: 1;
+  }
+  .hold-name {
+    font-size: 1.8;
+    color: #ffc800;
+    font-weight: bold;
+  }
+</style>
+<div class="next-panel">
+  <span class="label">NEXT</span>
+  <span id="next-1" class="piece-name">-</span>
+  <span id="next-2" class="piece-name">-</span>
+  <span id="next-3" class="piece-name">-</span>
+  <span class="hold-label">HOLD</span>
+  <span id="hold-piece" class="hold-name">-</span>
+</div>

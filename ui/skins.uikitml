@@ -1,0 +1,78 @@
+<style>
+  .panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2;
+    padding-bottom: 2;
+    padding-left: 4;
+    padding-right: 4;
+    background-color: rgba(0,0,0,0.85);
+    border-color: #ff8c00;
+    border-width: 0.15;
+    border-radius: 1.5;
+  }
+  .heading {
+    font-size: 3;
+    color: #ff8c00;
+    font-weight: bold;
+    margin-bottom: 1;
+  }
+  .row {
+    display: flex;
+    flex-direction: row;
+    width: 28;
+    align-items: center;
+    margin-bottom: 0.5;
+  }
+  .skin-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 12;
+    padding-top: 0.8;
+    padding-bottom: 0.8;
+    margin-left: 0.5;
+    margin-right: 0.5;
+    margin-bottom: 0.5;
+    background-color: rgba(255,140,0,0.1);
+    border-color: #ff8c00;
+    border-width: 0.08;
+    border-radius: 0.5;
+    cursor: pointer;
+  }
+  .skin-text { font-size: 1.2; color: #ff8c00; font-weight: bold; }
+  .btn-back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20;
+    padding-top: 1;
+    padding-bottom: 1;
+    margin-top: 1;
+    background-color: rgba(255,100,100,0.1);
+    border-color: #ff6464;
+    border-width: 0.08;
+    border-radius: 0.6;
+    cursor: pointer;
+  }
+  .back-text { font-size: 1.8; color: #ff6464; font-weight: bold; }
+</style>
+<div class="panel">
+  <span class="heading">BLOCK SKINS</span>
+  <div class="row">
+    <div id="skin-0" class="skin-btn" cursor="pointer"><span id="skin-n0" class="skin-text">Neon</span></div>
+    <div id="skin-1" class="skin-btn" cursor="pointer"><span id="skin-n1" class="skin-text">Crystal</span></div>
+  </div>
+  <div class="row">
+    <div id="skin-2" class="skin-btn" cursor="pointer"><span id="skin-n2" class="skin-text">Hologram</span></div>
+    <div id="skin-3" class="skin-btn" cursor="pointer"><span id="skin-n3" class="skin-text">Plasma</span></div>
+  </div>
+  <div class="row">
+    <div id="skin-4" class="skin-btn" cursor="pointer"><span id="skin-n4" class="skin-text">Void</span></div>
+    <div id="skin-5" class="skin-btn" cursor="pointer"><span id="skin-n5" class="skin-text">Solar</span></div>
+  </div>
+  <div id="btn-back" class="btn-back" cursor="pointer">
+    <span class="back-text">BACK</span>
+  </div>
+</div>
