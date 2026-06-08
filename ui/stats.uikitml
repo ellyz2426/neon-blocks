@@ -73,6 +73,9 @@
   <div class="row"><span class="label">Hard Drops</span><span id="st-hard-drops" class="value">0</span></div>
   <div class="row"><span class="label">Best Cascade</span><span id="st-best-cascade" class="value">0</span></div>
   <div class="row"><span class="label">Achievements</span><span id="st-achievements" class="value">0/0</span></div>
+  <span class="section">ZONE</span>
+  <div class="row"><span class="label">Zone Uses</span><span id="st-zone-uses" class="value">0</span></div>
+  <div class="row"><span class="label">Best Zone Lines</span><span id="st-zone-best" class="value">0</span></div>
   <div id="btn-back" class="btn-back" cursor="pointer">
     <span class="back-text">BACK</span>
   </div>

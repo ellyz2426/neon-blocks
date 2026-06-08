@@ -54,6 +54,8 @@
   <span class="text">Up Arrow / X: Rotate clockwise</span>
   <span class="text">Z: Rotate counter-clockwise</span>
   <span class="text">C: Hold piece</span>
+  <span class="text">Q: Activate Zone (when full)</span>
+  <span class="text">R: Quick restart</span>
   <span class="text">Escape: Pause</span>
   <span class="section">VR Controls</span>
   <span class="text">Right Thumbstick L/R: Move piece</span>
@@ -62,6 +64,13 @@
   <span class="text">A Button: Rotate CW</span>
   <span class="text">B Button: Rotate CCW / Pause</span>
   <span class="text">Left Trigger: Hold piece</span>
+  <span class="text">Left Squeeze: Activate Zone</span>
+  <span class="section">Zone System</span>
+  <span class="text">Clear lines to fill the Zone meter</span>
+  <span class="text">When full, press Q to enter the Zone</span>
+  <span class="text">Zone slows time for 12 seconds</span>
+  <span class="text">Lines bank up and clear all at once</span>
+  <span class="text">Massive bonus for stacking many lines!</span>
   <span class="section">Scoring</span>
   <span class="text">Single: 100 x level</span>
   <span class="text">Double: 300 x level</span>
@@ -79,6 +88,8 @@
   <span class="text">Blitz: 1 minute, maximum score</span>
   <span class="text">Daily: Seeded daily puzzle</span>
   <span class="text">Cascade: Cleared blocks trigger cascades</span>
+  <span class="text">Dig: Clear 8 rows of garbage ASAP</span>
+  <span class="text">Battle: Survive AI garbage attacks</span>
   <div id="btn-back" class="btn-back" cursor="pointer">
     <span class="back-text">BACK</span>
   </div>

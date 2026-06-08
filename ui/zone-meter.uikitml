@@ -1,0 +1,48 @@
+<style>
+  .zone-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-color: #ff8800;
+    border-width: 0.08;
+    border-radius: 0.5;
+  }
+  .zone-label {
+    font-size: 1.2;
+    color: #ff8800;
+    font-weight: bold;
+  }
+  .zone-bar-bg {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 4;
+    background-color: rgba(40, 20, 0, 0.8);
+    border-radius: 0.3;
+    margin-top: 0.3;
+  }
+  .zone-bar-fill {
+    height: 100%;
+    background-color: #ff8800;
+    border-radius: 0.3;
+  }
+  .zone-pct {
+    font-size: 1;
+    color: #ffaa44;
+    margin-top: 0.2;
+  }
+  .zone-hint {
+    font-size: 0.8;
+    color: #888888;
+  }
+</style>
+<div class="zone-container">
+  <span class="zone-label">ZONE</span>
+  <div class="zone-bar-bg">
+    <div id="zone-fill" class="zone-bar-fill" style="width: 0%"></div>
+  </div>
+  <span id="zone-pct" class="zone-pct">0%</span>
+  <span id="zone-hint" class="zone-hint">[Q] Activate</span>
+</div>

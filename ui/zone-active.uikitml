@@ -1,0 +1,33 @@
+<style>
+  .zone-active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5;
+    background-color: rgba(60, 30, 0, 0.9);
+    border-color: #ffaa00;
+    border-width: 0.15;
+    border-radius: 0.8;
+  }
+  .zone-title {
+    font-size: 2.5;
+    color: #ffcc00;
+    font-weight: bold;
+  }
+  .zone-lines {
+    font-size: 2;
+    color: #ff8800;
+    font-weight: bold;
+    margin-top: 0.5;
+  }
+  .zone-sub {
+    font-size: 1;
+    color: #cc8844;
+    margin-top: 0.3;
+  }
+</style>
+<div class="zone-active">
+  <span class="zone-title">⚡ ZONE ⚡</span>
+  <span id="zone-lines-count" class="zone-lines">0 LINES</span>
+  <span id="zone-timer" class="zone-sub">10.0s</span>
+</div>

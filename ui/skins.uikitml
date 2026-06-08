@@ -80,6 +80,10 @@
     <div id="skin-8" class="skin-btn" cursor="pointer"><span class="skin-text">Nebula</span></div>
     <div id="skin-9" class="skin-btn" cursor="pointer"><span class="skin-text">Obsidian</span></div>
   </div>
+  <div class="row">
+    <div id="skin-10" class="skin-btn" cursor="pointer"><span class="skin-text">Prism</span></div>
+    <div id="skin-11" class="skin-btn" cursor="pointer"><span class="skin-text">Glitch</span></div>
+  </div>
   <div id="btn-back" class="btn-back" cursor="pointer">
     <span class="back-text">BACK</span>
   </div>

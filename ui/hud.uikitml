@@ -63,4 +63,9 @@
     <span class="label">MODE</span>
     <span id="hud-mode" class="value">MARATHON</span>
   </div>
+  <span class="sep">|</span>
+  <div class="cell">
+    <span class="label">B2B</span>
+    <span id="hud-b2b" class="value">-</span>
+  </div>
 </div>

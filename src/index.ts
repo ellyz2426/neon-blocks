@@ -72,6 +72,8 @@ const THEMES = [
   { name: 'Midnight', grid: 0x110022, accent: 0x6644cc, bg: 0x050010, fog: 0x0a0018, wall: 0x220044 },
   { name: 'Inferno', grid: 0x331100, accent: 0xff4400, bg: 0x0a0400, fog: 0x150800, wall: 0x442200 },
   { name: 'Matrix', grid: 0x002200, accent: 0x33ff33, bg: 0x000800, fog: 0x001000, wall: 0x003300 },
+  { name: 'Sakura', grid: 0x331122, accent: 0xff88cc, bg: 0x0a0408, fog: 0x150812, wall: 0x442244 },
+  { name: 'Void', grid: 0x0a0a15, accent: 0x4444aa, bg: 0x020208, fog: 0x050510, wall: 0x1a1a33 },
 ];
 
 const SKINS = [
@@ -85,6 +87,8 @@ const SKINS = [
   { name: 'Chrome', wireframe: false, emissive: 0.5, roughness: 0.05, metalness: 1.0 },
   { name: 'Nebula', wireframe: false, emissive: 0.9, roughness: 0.3, metalness: 0.6 },
   { name: 'Obsidian', wireframe: false, emissive: 0.7, roughness: 0.15, metalness: 0.85 },
+  { name: 'Prism', wireframe: false, emissive: 1.3, roughness: 0.1, metalness: 0.95 },
+  { name: 'Glitch', wireframe: true, emissive: 1.1, roughness: 0.4, metalness: 0.6 },
 ];
 
 const PLAYER_TITLES = ['Novice','Beginner','Apprentice','Student','Learner','Adept','Skilled','Expert','Master','Champion','Legend','Titan','Prodigy','Virtuoso','Grandmaster','Overlord','Demigod','Immortal','Transcendent','NEON GOD'];
@@ -227,6 +231,26 @@ const ACHIEVEMENTS: Achievement[] = [
   { id: 'speed_20', name: 'Terminal Velocity', desc: 'Play at drop speed < 0.1s' },
   { id: 'garbage_clear', name: 'Garbage Collector', desc: 'Clear a garbage line in Survival' },
   { id: 'garbage_10', name: 'Sanitation Expert', desc: 'Clear 10 garbage lines total' },
+
+  // Zone
+  { id: 'first_zone', name: 'Zone Activated', desc: 'Activate Zone for the first time' },
+  { id: 'zone_5', name: 'Zone Adept', desc: 'Activate Zone 5 times total' },
+  { id: 'zone_10', name: 'Zone Master', desc: 'Activate Zone 10 times total' },
+  { id: 'zone_25', name: 'Zone Lord', desc: 'Activate Zone 25 times total' },
+  { id: 'zone_lines_5', name: 'Zone Stacker', desc: 'Clear 5+ lines in a single Zone' },
+  { id: 'zone_lines_8', name: 'Zone Prodigy', desc: 'Clear 8+ lines in a single Zone' },
+  { id: 'zone_lines_12', name: 'Zone God', desc: 'Clear 12+ lines in a single Zone' },
+  { id: 'zone_lines_16', name: 'Zone Transcendent', desc: 'Clear 16+ lines in a single Zone' },
+  { id: 'zone_decahexatris', name: 'DECAHEXATRIS', desc: 'Clear 16 lines simultaneously in Zone' },
+  { id: 'zone_perfect', name: 'Zone Perfect', desc: 'Empty the board during Zone' },
+
+  // Piece stats
+  { id: 'piece_i_100', name: 'I-Piece Fan', desc: 'Place 100 I-pieces total' },
+  { id: 'piece_t_100', name: 'T-Piece Fan', desc: 'Place 100 T-pieces total' },
+
+  // All skins/themes expanded
+  { id: 'all_12_themes', name: 'Interior Designer', desc: 'Try all 12 holodeck themes' },
+  { id: 'all_12_skins', name: 'Fashionista', desc: 'Try all 12 block skins' },
 ];
 
 // ─── SAVE DATA ─────────────────────────────────────────────────────
@@ -240,7 +264,8 @@ interface SaveData {
     singles: number; doubles: number; triples: number; perfectClears: number;
     garbageCleared: number; bestCascade: number; themesUsed: number[]; skinsUsed: number[];
     powerUpsUsed: number; battleBestMs: number; digBestMs: number; garbageSent: number;
-    holdUsedCount: number;
+    holdUsedCount: number; zoneActivations: number; bestZoneLines: number;
+    pieceCounts: Record<string, number>;
   };
   settings: { masterVol: number; sfxVol: number; musicVol: number; themeIdx: number; skinIdx: number; difficulty: number; ghostVisible: boolean; dasLevel: number };
   xp: number; playerLevel: number;
@@ -254,7 +279,8 @@ function defaultSave(): SaveData {
       singles: 0, doubles: 0, triples: 0, perfectClears: 0,
       garbageCleared: 0, bestCascade: 0, themesUsed: [0], skinsUsed: [0],
       powerUpsUsed: 0, battleBestMs: 0, digBestMs: 0, garbageSent: 0,
-      holdUsedCount: 0,
+      holdUsedCount: 0, zoneActivations: 0, bestZoneLines: 0,
+      pieceCounts: { I: 0, O: 0, T: 0, S: 0, Z: 0, J: 0, L: 0 },
     },
     settings: { masterVol: 100, sfxVol: 100, musicVol: 100, themeIdx: 0, skinIdx: 0, difficulty: 1, ghostVisible: true, dasLevel: 1 },
   };
@@ -832,6 +858,17 @@ async function main() {
   interface DropTrail { mesh: Mesh; life: number; }
   const dropTrails: DropTrail[] = [];
 
+  // Zone system state
+  let zoneMeter = 0; // 0-100
+  const ZONE_METER_MAX = 100;
+  const ZONE_METER_PER_LINE = 12; // ~8 lines to fill
+  let zoneActive = false;
+  let zoneTimer = 0;
+  const ZONE_DURATION = 12; // seconds
+  let zoneLinesCleared = 0;
+  let zonePendingRows: number[] = []; // rows cleared during Zone, held until exit
+  let gamePieceCounts: Record<string, number> = { I: 0, O: 0, T: 0, S: 0, Z: 0, J: 0, L: 0 };
+
   // Combo intensity (for border glow)
   let comboIntensity = 0;
 
@@ -1013,6 +1050,12 @@ async function main() {
     clearGhost();
     audio.lock();
     gamePieces++;
+    // Track piece type counts
+    gamePieceCounts[curType] = (gamePieceCounts[curType] || 0) + 1;
+    if (!save.stats.pieceCounts) save.stats.pieceCounts = { I: 0, O: 0, T: 0, S: 0, Z: 0, J: 0, L: 0 };
+    save.stats.pieceCounts[curType] = (save.stats.pieceCounts[curType] || 0) + 1;
+    if (save.stats.pieceCounts['I'] >= 100) checkAchievement('piece_i_100');
+    if (save.stats.pieceCounts['T'] >= 100) checkAchievement('piece_t_100');
 
     // Check for line clears
     const linesToClear: number[] = [];
@@ -1021,6 +1064,39 @@ async function main() {
     }
 
     if (linesToClear.length > 0) {
+      // Zone mode: bank lines instead of clearing
+      if (zoneActive) {
+        zoneLinesCleared += linesToClear.length;
+        zonePendingRows.push(...linesToClear);
+
+        // Remove the filled rows visually but keep board state for zone exit
+        // Actually mark them as zone-banked by coloring them gold
+        for (const row of linesToClear) {
+          for (let c = 0; c < COLS; c++) {
+            const block = activeBlocks[row]?.[c];
+            if (block) {
+              (block.material as MeshStandardMaterial).color.set(0xffcc00);
+              (block.material as MeshStandardMaterial).emissive.set(0xffcc00);
+              (block.material as MeshStandardMaterial).emissiveIntensity = 0.8;
+            }
+          }
+        }
+
+        // Score per zone line
+        gameScore += linesToClear.length * 100 * gameLevel;
+        audio.lineClear(linesToClear.length);
+
+        const zaDoc = panelEntities.get('zoneActive')?.getValue(PanelDocument, 'document') as UIKitDocument | undefined;
+        if (zaDoc) {
+          const lc = zaDoc.getElementById('zone-lines-count');
+          if (lc) lc.text.value = `${zoneLinesCleared} LINES`;
+        }
+
+        // Spawn next piece without clearing
+        spawnPiece();
+        return; // Skip normal clear logic
+      }
+
       // Track garbage lines cleared
       for (const row of linesToClear) {
         if (boardIsGarbage[row].some(g => g)) {
@@ -1109,6 +1185,12 @@ async function main() {
       audio.lineClear(linesToClear.length);
       if (!isTSpin) {
         showLineClearText(linesToClear.length >= 4 ? 'TETRIS!' : linesToClear.length === 3 ? 'TRIPLE!' : linesToClear.length === 2 ? 'DOUBLE!' : 'SINGLE');
+      }
+
+      // Charge zone meter
+      if (!zoneActive) {
+        const zoneCharge = linesToClear.length * ZONE_METER_PER_LINE + (isTSpin ? 10 : 0) + (linesToClear.length >= 4 ? 8 : 0);
+        zoneMeter = Math.min(ZONE_METER_MAX, zoneMeter + zoneCharge);
       }
 
       // Particle burst
@@ -1299,7 +1381,7 @@ async function main() {
     const base = gameMode === 'zen' ? 999 : (difficulty === 0 ? 1.2 : difficulty === 2 ? 0.6 : 0.8);
     const speedup = gameMode === 'survival' || gameMode === 'battle' ? 0.06 : 0.04;
     const interval = Math.max(0.05, base - (gameLevel - 1) * speedup);
-    return freezeTimer > 0 ? interval * 2 : interval;
+    return freezeTimer > 0 ? interval * 2 : zoneActive ? interval * 3 : interval;
   }
 
   // ─── POWER-UP ACTIVATION ──────────────────────────────────────
@@ -1364,6 +1446,104 @@ async function main() {
       }
     }
     audio.powerUp();
+  }
+
+  // ─── ZONE SYSTEM ──────────────────────────────────────────────
+  function activateZone() {
+    if (zoneActive || zoneMeter < ZONE_METER_MAX || gameState !== 'playing') return;
+    zoneActive = true;
+    zoneTimer = ZONE_DURATION;
+    zoneLinesCleared = 0;
+    zonePendingRows = [];
+    zoneMeter = 0;
+
+    save.stats.zoneActivations++;
+    checkAchievement('first_zone');
+    if (save.stats.zoneActivations >= 5) checkAchievement('zone_5');
+    if (save.stats.zoneActivations >= 10) checkAchievement('zone_10');
+    if (save.stats.zoneActivations >= 25) checkAchievement('zone_25');
+
+    audio.powerUp();
+    showLineClearText('⚡ ZONE ⚡');
+    triggerShake(0.01, 0.3);
+
+    // Show zone active panel
+    const zaEntity = panelEntities.get('zoneActive');
+    if (zaEntity) zaEntity.object3D.visible = true;
+    // Hide zone meter
+    const zmEntity = panelEntities.get('zoneMeter');
+    if (zmEntity) zmEntity.object3D.visible = false;
+  }
+
+  function deactivateZone() {
+    if (!zoneActive) return;
+    zoneActive = false;
+
+    // Score: all zone lines clear simultaneously
+    if (zoneLinesCleared > 0) {
+      // Named clears for zone: Decahexatris (16), Dodecatris (12), Octotris (8)
+      const zoneNames: Record<number, string> = {
+        1: 'Single', 2: 'Double', 3: 'Triple', 4: 'Tetris',
+        5: 'Pentris', 6: 'Hexatris', 7: 'Heptatris', 8: 'Octotris',
+        9: 'Enneatris', 10: 'Decatris', 11: 'Hendecatris', 12: 'Dodecatris',
+        13: 'Triskaidecatris', 14: 'Tetrakaidecatris', 15: 'Pentadecatris', 16: 'DECAHEXATRIS',
+      };
+      const clearName = zoneNames[Math.min(zoneLinesCleared, 16)] || `${zoneLinesCleared}-LINE`;
+      showLineClearText(`ZONE ${clearName}!`);
+
+      // Zone scoring: exponential bonus
+      const zoneBonus = Math.floor(100 * Math.pow(zoneLinesCleared, 1.8) * gameLevel);
+      gameScore += zoneBonus;
+
+      // Achievements
+      if (zoneLinesCleared >= 5) checkAchievement('zone_lines_5');
+      if (zoneLinesCleared >= 8) checkAchievement('zone_lines_8');
+      if (zoneLinesCleared >= 12) checkAchievement('zone_lines_12');
+      if (zoneLinesCleared >= 16) { checkAchievement('zone_lines_16'); checkAchievement('zone_decahexatris'); }
+      if (zoneLinesCleared > save.stats.bestZoneLines) save.stats.bestZoneLines = zoneLinesCleared;
+
+      // Big screen shake and particles
+      triggerShake(0.025 + zoneLinesCleared * 0.002, 0.5);
+      for (const row of zonePendingRows) {
+        const wp = new Vector3();
+        wp.set(boardGroup.position.x + boardW / 2, boardGroup.position.y + row * CELL + CELL / 2, boardGroup.position.z);
+        spawnParticles(wp, 0xffcc00, 15);
+      }
+
+      // Now actually clear the zone rows
+      const sorted = [...new Set(zonePendingRows)].sort((a, b) => b - a);
+      for (const row of sorted) {
+        for (let c = 0; c < COLS; c++) removeBlock(row, c);
+        board.splice(row, 1);
+        board.push(Array(COLS).fill(0));
+        boardIsGarbage.splice(row, 1);
+        boardIsGarbage.push(Array(COLS).fill(false));
+      }
+      rebuildBoardVisuals();
+
+      gameLines += zoneLinesCleared;
+      save.stats.totalLines += zoneLinesCleared;
+
+      // Zone perfect: board empty after zone
+      if (board.every(row => row.every(c => c === 0))) {
+        checkAchievement('zone_perfect');
+        gameScore += 5000 * gameLevel;
+        showLineClearText('ZONE PERFECT!');
+      }
+
+      audio.lineClear(Math.min(zoneLinesCleared, 4));
+    }
+
+    // Hide zone active panel
+    const zaEntity = panelEntities.get('zoneActive');
+    if (zaEntity) zaEntity.object3D.visible = false;
+    // Show zone meter if playing
+    const zmEntity = panelEntities.get('zoneMeter');
+    if (zmEntity && gameState === 'playing') zmEntity.object3D.visible = true;
+
+    zonePendingRows = [];
+    zoneLinesCleared = 0;
+    writeSave(save);
   }
 
   // ─── DROP TRAIL VFX ────────────────────────────────────────────
@@ -1560,6 +1740,9 @@ async function main() {
   createPanel('lineClear', '/ui/line-clear.json', { follower: true, width: 0.3, height: 0.08 });
   createPanel('levelUp', '/ui/level-up.json', { follower: true, width: 0.3, height: 0.08 });
   createPanel('powerup', '/ui/powerup.json', { follower: true, width: 0.25, height: 0.06 });
+  createPanel('zoneMeter', '/ui/zone-meter.json', { screenSpace: true, ssWidth: '10vw', ssBottom: '24px', ssLeft: '24px', width: 0.12, height: 0.12 });
+  createPanel('zoneActive', '/ui/zone-active.json', { follower: true, width: 0.35, height: 0.12 });
+  createPanel('pieceStats', '/ui/piece-stats.json', { screenSpace: true, ssWidth: '8vw', ssBottom: '200px', ssLeft: '24px', width: 0.1, height: 0.25 });
 
   function showPanel(id: string) {
     panelEntities.forEach((e, key) => { e.object3D.visible = key === id; });
@@ -1692,6 +1875,8 @@ async function main() {
     setText('st-hard-drops', `${s.hardDrops || 0}`);
     setText('st-best-cascade', `${s.bestCascade || 0}`);
     setText('st-achievements', `${save.achievements.length}/${ACHIEVEMENTS.length}`);
+    setText('st-zone-uses', `${save.stats.zoneActivations || 0}`);
+    setText('st-zone-best', `${save.stats.bestZoneLines || 0}`);
   }
 
   // ─── SETTINGS PANEL ──────────────────────────────────────────
@@ -1722,6 +1907,7 @@ async function main() {
     const mins = Math.floor(secs / 60);
     setText('hud-time', `${mins}:${(secs % 60).toString().padStart(2, '0')}`);
     setText('hud-mode', gameMode.toUpperCase());
+    setText('hud-b2b', backToBack > 0 ? `x${backToBack}` : '-');
   }
 
   function updateNextHoldPanel() {
@@ -1770,6 +1956,12 @@ async function main() {
     digLinesLeft = 0;
     digWon = false;
     comboIntensity = 0;
+    zoneMeter = 0;
+    zoneActive = false;
+    zoneTimer = 0;
+    zoneLinesCleared = 0;
+    zonePendingRows = [];
+    gamePieceCounts = { I: 0, O: 0, T: 0, S: 0, Z: 0, J: 0, L: 0 };
     gameLevel = difficulty === 0 ? 1 : difficulty === 2 ? 3 : 1;
     prevGameLevel = gameLevel;
     lockTimer = 0; isLocking = false; lockResets = 0;
@@ -1809,12 +2001,13 @@ async function main() {
 
   function beginPlaying() {
     gameState = 'playing';
-    showPanels('hud', 'nextHold');
+    showPanels('hud', 'nextHold', 'zoneMeter', 'pieceStats');
     spawnPiece();
     audio.startMusic();
   }
 
   function endGame() {
+    if (zoneActive) deactivateZone();
     gameState = 'gameOver';
     clearPieceMeshes(); clearGhost();
     audio.gameOver();
@@ -1922,6 +2115,8 @@ async function main() {
     if (!save.stats.skinsUsed.includes(save.settings.skinIdx)) save.stats.skinsUsed.push(save.settings.skinIdx);
     if (save.stats.themesUsed.length >= 10) checkAchievement('all_themes');
     if (save.stats.skinsUsed.length >= 10) checkAchievement('all_skins');
+    if (save.stats.themesUsed.length >= 12) checkAchievement('all_12_themes');
+    if (save.stats.skinsUsed.length >= 12) checkAchievement('all_12_skins');
 
     writeSave(save);
 
@@ -1985,7 +2180,7 @@ async function main() {
   wireButton('difficulty', 'btn-back', () => { gameState = 'modeSelect'; showPanel('modeSelect'); });
 
   // Pause (with restart)
-  wireButton('pause', 'btn-resume', () => { gameState = 'playing'; showPanels('hud', 'nextHold'); audio.startMusic(); });
+  wireButton('pause', 'btn-resume', () => { gameState = 'playing'; showPanels('hud', 'nextHold', 'zoneMeter', 'pieceStats'); audio.startMusic(); });
   wireButton('pause', 'btn-restart', () => { audio.stopMusic(); startGame(); });
   wireButton('pause', 'btn-quit', () => { gameState = 'title'; boardGroup.visible = false; clearPieceMeshes(); clearGhost(); audio.stopMusic(); updateTitlePanel(); showPanel('title'); });
 
@@ -2019,6 +2214,7 @@ async function main() {
     save.settings.themeIdx = (save.settings.themeIdx + 1) % THEMES.length;
     if (!save.stats.themesUsed.includes(save.settings.themeIdx)) save.stats.themesUsed.push(save.settings.themeIdx);
     if (save.stats.themesUsed.length >= 10) checkAchievement('all_themes');
+    if (save.stats.themesUsed.length >= 12) checkAchievement('all_12_themes');
     applyTheme(save.settings.themeIdx); updateSettingsPanel(); writeSave(save);
   });
   // Ghost toggle
@@ -2044,15 +2240,17 @@ async function main() {
     save.settings.themeIdx = (save.settings.themeIdx - 1 + THEMES.length) % THEMES.length;
     if (!save.stats.themesUsed.includes(save.settings.themeIdx)) save.stats.themesUsed.push(save.settings.themeIdx);
     if (save.stats.themesUsed.length >= 10) checkAchievement('all_themes');
+    if (save.stats.themesUsed.length >= 12) checkAchievement('all_12_themes');
     applyTheme(save.settings.themeIdx); updateSettingsPanel(); writeSave(save);
   });
 
-  // Skins (10 skins)
+  // Skins (12 skins)
   for (let i = 0; i < SKINS.length; i++) {
     wireButton('skins', `skin-${i}`, () => {
       save.settings.skinIdx = i;
       if (!save.stats.skinsUsed.includes(i)) save.stats.skinsUsed.push(i);
       if (save.stats.skinsUsed.length >= 10) checkAchievement('all_skins');
+      if (save.stats.skinsUsed.length >= 12) checkAchievement('all_12_skins');
       if (i > 0) checkAchievement('skin_used');
       writeSave(save);
       showToast(`Skin: ${SKINS[i].name}`);
@@ -2073,7 +2271,7 @@ async function main() {
     if (gameState !== 'playing') {
       if (gameState === 'paused' && keyDown.has('Escape')) {
         gameState = 'playing';
-        showPanels('hud', 'nextHold');
+        showPanels('hud', 'nextHold', 'zoneMeter', 'pieceStats');
         audio.startMusic();
       }
       keyDown.clear();
@@ -2108,6 +2306,9 @@ async function main() {
     if (keys.has('ArrowDown')) softDrop();
 
     if (keyDown.has('KeyC')) holdPiece();
+
+    // Zone activation
+    if (keyDown.has('KeyQ')) activateZone();
 
     // Quick restart with R
     if (keyDown.has('KeyR')) {
@@ -2154,6 +2355,8 @@ async function main() {
       if (left?.getButtonDown?.(0)) holdPiece();
       // Left A button = rotate CCW
       if (left?.getButtonDown?.(3)) rotatePiece(-1);
+      // Left squeeze = activate Zone
+      if (left?.getButtonDown?.(1)) activateZone();
     }
   }
 
@@ -2230,6 +2433,39 @@ async function main() {
       if (freezeTimer > 0) {
         freezeTimer -= dt;
         if (freezeTimer <= 0) showToast('Freeze ended');
+      }
+
+      // Zone timer
+      if (zoneActive) {
+        zoneTimer -= dt;
+        const zaDoc = panelEntities.get('zoneActive')?.getValue(PanelDocument, 'document') as UIKitDocument | undefined;
+        if (zaDoc) {
+          const zt = zaDoc.getElementById('zone-timer');
+          if (zt) zt.text.value = `${zoneTimer.toFixed(1)}s`;
+        }
+        if (zoneTimer <= 0) deactivateZone();
+      }
+
+      // Update zone meter UI
+      if (!zoneActive) {
+        const zmDoc = panelEntities.get('zoneMeter')?.getValue(PanelDocument, 'document') as UIKitDocument | undefined;
+        if (zmDoc) {
+          const fill = zmDoc.getElementById('zone-fill');
+          const pct = zmDoc.getElementById('zone-pct');
+          const hint = zmDoc.getElementById('zone-hint');
+          if (fill) (fill as any).style = { width: `${zoneMeter}%` };
+          if (pct) pct.text.value = `${Math.floor(zoneMeter)}%`;
+          if (hint) hint.text.value = zoneMeter >= ZONE_METER_MAX ? '[Q] READY!' : '[Q] Activate';
+        }
+      }
+
+      // Update piece stats panel
+      const psDoc = panelEntities.get('pieceStats')?.getValue(PanelDocument, 'document') as UIKitDocument | undefined;
+      if (psDoc) {
+        for (const pt of ['I', 'O', 'T', 'S', 'Z', 'J', 'L']) {
+          const el = psDoc.getElementById(`ps-${pt.toLowerCase()}`);
+          if (el) el.text.value = `${gamePieceCounts[pt] || 0}`;
+        }
       }
 
       // Combo intensity decay

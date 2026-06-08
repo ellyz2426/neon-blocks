@@ -255,6 +255,50 @@
           "class": "cell"
         },
         "dataUid": "uid-22"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "|"
+        ],
+        "properties": {
+          "class": "sep"
+        },
+        "dataUid": "uid-25"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "B2B"
+            ],
+            "properties": {
+              "class": "label"
+            },
+            "dataUid": "uid-27"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "-"
+            ],
+            "properties": {
+              "id": "hud-b2b",
+              "class": "value"
+            },
+            "dataUid": "uid-28"
+          }
+        ],
+        "properties": {
+          "class": "cell"
+        },
+        "dataUid": "uid-26"
       }
     ],
     "properties": {
@@ -364,7 +408,7 @@
         "column": 0
       },
       "end": {
-        "line": 65,
+        "line": 70,
         "column": 6
       }
     },
@@ -596,6 +640,46 @@
       "end": {
         "line": 63,
         "column": 53
+      }
+    },
+    "uid-25": {
+      "start": {
+        "line": 65,
+        "column": 2
+      },
+      "end": {
+        "line": 65,
+        "column": 28
+      }
+    },
+    "uid-26": {
+      "start": {
+        "line": 66,
+        "column": 2
+      },
+      "end": {
+        "line": 69,
+        "column": 8
+      }
+    },
+    "uid-27": {
+      "start": {
+        "line": 67,
+        "column": 4
+      },
+      "end": {
+        "line": 67,
+        "column": 34
+      }
+    },
+    "uid-28": {
+      "start": {
+        "line": 68,
+        "column": 4
+      },
+      "end": {
+        "line": 68,
+        "column": 45
       }
     }
   }

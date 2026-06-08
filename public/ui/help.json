@@ -95,7 +95,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Escape: Pause"
+          "Q: Activate Zone (when full)"
         ],
         "properties": {
           "class": "text"
@@ -106,10 +106,10 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "VR Controls"
+          "R: Quick restart"
         ],
         "properties": {
-          "class": "section"
+          "class": "text"
         },
         "dataUid": "uid-11"
       },
@@ -117,7 +117,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Right Thumbstick L/R: Move piece"
+          "Escape: Pause"
         ],
         "properties": {
           "class": "text"
@@ -128,10 +128,10 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Right Thumbstick Down: Soft drop"
+          "VR Controls"
         ],
         "properties": {
-          "class": "text"
+          "class": "section"
         },
         "dataUid": "uid-13"
       },
@@ -139,7 +139,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Right Trigger: Hard drop"
+          "Right Thumbstick L/R: Move piece"
         ],
         "properties": {
           "class": "text"
@@ -150,7 +150,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "A Button: Rotate CW"
+          "Right Thumbstick Down: Soft drop"
         ],
         "properties": {
           "class": "text"
@@ -161,7 +161,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "B Button: Rotate CCW / Pause"
+          "Right Trigger: Hard drop"
         ],
         "properties": {
           "class": "text"
@@ -172,7 +172,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Left Trigger: Hold piece"
+          "A Button: Rotate CW"
         ],
         "properties": {
           "class": "text"
@@ -183,10 +183,10 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Scoring"
+          "B Button: Rotate CCW / Pause"
         ],
         "properties": {
-          "class": "section"
+          "class": "text"
         },
         "dataUid": "uid-18"
       },
@@ -194,7 +194,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Single: 100 x level"
+          "Left Trigger: Hold piece"
         ],
         "properties": {
           "class": "text"
@@ -205,7 +205,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Double: 300 x level"
+          "Left Squeeze: Activate Zone"
         ],
         "properties": {
           "class": "text"
@@ -216,10 +216,10 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Triple: 500 x level"
+          "Zone System"
         ],
         "properties": {
-          "class": "text"
+          "class": "section"
         },
         "dataUid": "uid-21"
       },
@@ -227,7 +227,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Tetris (4 lines): 800 x level"
+          "Clear lines to fill the Zone meter"
         ],
         "properties": {
           "class": "text"
@@ -238,7 +238,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "T-Spin: Bonus points!"
+          "When full, press Q to enter the Zone"
         ],
         "properties": {
           "class": "text"
@@ -249,7 +249,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Back-to-Back: 1.5x multiplier"
+          "Zone slows time for 12 seconds"
         ],
         "properties": {
           "class": "text"
@@ -260,7 +260,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Combos: +50 x combo x level"
+          "Lines bank up and clear all at once"
         ],
         "properties": {
           "class": "text"
@@ -271,10 +271,10 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Game Modes"
+          "Massive bonus for stacking many lines!"
         ],
         "properties": {
-          "class": "section"
+          "class": "text"
         },
         "dataUid": "uid-26"
       },
@@ -282,10 +282,10 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Marathon: Endless, level up every 10 lines"
+          "Scoring"
         ],
         "properties": {
-          "class": "text"
+          "class": "section"
         },
         "dataUid": "uid-27"
       },
@@ -293,7 +293,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Sprint 40: Clear 40 lines as fast as possible"
+          "Single: 100 x level"
         ],
         "properties": {
           "class": "text"
@@ -304,7 +304,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Ultra: Score as much as you can in 3 minutes"
+          "Double: 300 x level"
         ],
         "properties": {
           "class": "text"
@@ -315,7 +315,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Survival: Speed increases constantly"
+          "Triple: 500 x level"
         ],
         "properties": {
           "class": "text"
@@ -326,7 +326,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Zen: No gravity, place freely"
+          "Tetris (4 lines): 800 x level"
         ],
         "properties": {
           "class": "text"
@@ -337,7 +337,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Blitz: 1 minute, maximum score"
+          "T-Spin: Bonus points!"
         ],
         "properties": {
           "class": "text"
@@ -348,7 +348,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Daily: Seeded daily puzzle"
+          "Back-to-Back: 1.5x multiplier"
         ],
         "properties": {
           "class": "text"
@@ -359,12 +359,133 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Cascade: Cleared blocks trigger cascades"
+          "Combos: +50 x combo x level"
         ],
         "properties": {
           "class": "text"
         },
         "dataUid": "uid-34"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Game Modes"
+        ],
+        "properties": {
+          "class": "section"
+        },
+        "dataUid": "uid-35"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Marathon: Endless, level up every 10 lines"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-36"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Sprint 40: Clear 40 lines as fast as possible"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-37"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Ultra: Score as much as you can in 3 minutes"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-38"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Survival: Speed increases constantly"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-39"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Zen: No gravity, place freely"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-40"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Blitz: 1 minute, maximum score"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-41"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Daily: Seeded daily puzzle"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-42"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Cascade: Cleared blocks trigger cascades"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-43"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Dig: Clear 8 rows of garbage ASAP"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-44"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Battle: Survive AI garbage attacks"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-45"
       },
       {
         "type": "container",
@@ -379,7 +500,7 @@
             "properties": {
               "class": "back-text"
             },
-            "dataUid": "uid-36"
+            "dataUid": "uid-47"
           }
         ],
         "properties": {
@@ -387,7 +508,7 @@
           "class": "btn-back",
           "cursor": "pointer"
         },
-        "dataUid": "uid-35"
+        "dataUid": "uid-46"
       }
     ],
     "properties": {
@@ -525,7 +646,7 @@
         "column": 0
       },
       "end": {
-        "line": 84,
+        "line": 95,
         "column": 6
       }
     },
@@ -616,7 +737,7 @@
       },
       "end": {
         "line": 56,
-        "column": 41
+        "column": 56
       }
     },
     "uid-11": {
@@ -626,7 +747,7 @@
       },
       "end": {
         "line": 57,
-        "column": 42
+        "column": 44
       }
     },
     "uid-12": {
@@ -636,7 +757,7 @@
       },
       "end": {
         "line": 58,
-        "column": 60
+        "column": 41
       }
     },
     "uid-13": {
@@ -646,7 +767,7 @@
       },
       "end": {
         "line": 59,
-        "column": 60
+        "column": 42
       }
     },
     "uid-14": {
@@ -656,7 +777,7 @@
       },
       "end": {
         "line": 60,
-        "column": 52
+        "column": 60
       }
     },
     "uid-15": {
@@ -666,7 +787,7 @@
       },
       "end": {
         "line": 61,
-        "column": 47
+        "column": 60
       }
     },
     "uid-16": {
@@ -676,7 +797,7 @@
       },
       "end": {
         "line": 62,
-        "column": 56
+        "column": 52
       }
     },
     "uid-17": {
@@ -686,7 +807,7 @@
       },
       "end": {
         "line": 63,
-        "column": 52
+        "column": 47
       }
     },
     "uid-18": {
@@ -696,7 +817,7 @@
       },
       "end": {
         "line": 64,
-        "column": 38
+        "column": 56
       }
     },
     "uid-19": {
@@ -706,7 +827,7 @@
       },
       "end": {
         "line": 65,
-        "column": 47
+        "column": 52
       }
     },
     "uid-20": {
@@ -716,7 +837,7 @@
       },
       "end": {
         "line": 66,
-        "column": 47
+        "column": 55
       }
     },
     "uid-21": {
@@ -726,7 +847,7 @@
       },
       "end": {
         "line": 67,
-        "column": 47
+        "column": 42
       }
     },
     "uid-22": {
@@ -736,7 +857,7 @@
       },
       "end": {
         "line": 68,
-        "column": 57
+        "column": 62
       }
     },
     "uid-23": {
@@ -746,7 +867,7 @@
       },
       "end": {
         "line": 69,
-        "column": 49
+        "column": 64
       }
     },
     "uid-24": {
@@ -756,7 +877,7 @@
       },
       "end": {
         "line": 70,
-        "column": 57
+        "column": 58
       }
     },
     "uid-25": {
@@ -766,7 +887,7 @@
       },
       "end": {
         "line": 71,
-        "column": 55
+        "column": 63
       }
     },
     "uid-26": {
@@ -776,7 +897,7 @@
       },
       "end": {
         "line": 72,
-        "column": 41
+        "column": 66
       }
     },
     "uid-27": {
@@ -786,7 +907,7 @@
       },
       "end": {
         "line": 73,
-        "column": 70
+        "column": 38
       }
     },
     "uid-28": {
@@ -796,7 +917,7 @@
       },
       "end": {
         "line": 74,
-        "column": 73
+        "column": 47
       }
     },
     "uid-29": {
@@ -806,7 +927,7 @@
       },
       "end": {
         "line": 75,
-        "column": 72
+        "column": 47
       }
     },
     "uid-30": {
@@ -816,7 +937,7 @@
       },
       "end": {
         "line": 76,
-        "column": 64
+        "column": 47
       }
     },
     "uid-31": {
@@ -836,7 +957,7 @@
       },
       "end": {
         "line": 78,
-        "column": 58
+        "column": 49
       }
     },
     "uid-33": {
@@ -846,7 +967,7 @@
       },
       "end": {
         "line": 79,
-        "column": 54
+        "column": 57
       }
     },
     "uid-34": {
@@ -856,7 +977,7 @@
       },
       "end": {
         "line": 80,
-        "column": 68
+        "column": 55
       }
     },
     "uid-35": {
@@ -865,17 +986,127 @@
         "column": 2
       },
       "end": {
-        "line": 83,
-        "column": 8
+        "line": 81,
+        "column": 41
       }
     },
     "uid-36": {
       "start": {
         "line": 82,
-        "column": 4
+        "column": 2
       },
       "end": {
         "line": 82,
+        "column": 70
+      }
+    },
+    "uid-37": {
+      "start": {
+        "line": 83,
+        "column": 2
+      },
+      "end": {
+        "line": 83,
+        "column": 73
+      }
+    },
+    "uid-38": {
+      "start": {
+        "line": 84,
+        "column": 2
+      },
+      "end": {
+        "line": 84,
+        "column": 72
+      }
+    },
+    "uid-39": {
+      "start": {
+        "line": 85,
+        "column": 2
+      },
+      "end": {
+        "line": 85,
+        "column": 64
+      }
+    },
+    "uid-40": {
+      "start": {
+        "line": 86,
+        "column": 2
+      },
+      "end": {
+        "line": 86,
+        "column": 57
+      }
+    },
+    "uid-41": {
+      "start": {
+        "line": 87,
+        "column": 2
+      },
+      "end": {
+        "line": 87,
+        "column": 58
+      }
+    },
+    "uid-42": {
+      "start": {
+        "line": 88,
+        "column": 2
+      },
+      "end": {
+        "line": 88,
+        "column": 54
+      }
+    },
+    "uid-43": {
+      "start": {
+        "line": 89,
+        "column": 2
+      },
+      "end": {
+        "line": 89,
+        "column": 68
+      }
+    },
+    "uid-44": {
+      "start": {
+        "line": 90,
+        "column": 2
+      },
+      "end": {
+        "line": 90,
+        "column": 61
+      }
+    },
+    "uid-45": {
+      "start": {
+        "line": 91,
+        "column": 2
+      },
+      "end": {
+        "line": 91,
+        "column": 62
+      }
+    },
+    "uid-46": {
+      "start": {
+        "line": 92,
+        "column": 2
+      },
+      "end": {
+        "line": 94,
+        "column": 8
+      }
+    },
+    "uid-47": {
+      "start": {
+        "line": 93,
+        "column": 4
+      },
+      "end": {
+        "line": 93,
         "column": 39
       }
     }

@@ -1,0 +1,48 @@
+<style>
+  .ps-container {
+    display: flex;
+    flex-direction: column;
+    padding: 1;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-color: #00aaff;
+    border-width: 0.06;
+    border-radius: 0.5;
+  }
+  .ps-title {
+    font-size: 1.2;
+    color: #00aaff;
+    font-weight: bold;
+    margin-bottom: 0.3;
+  }
+  .ps-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 0.15;
+  }
+  .ps-piece {
+    font-size: 1;
+    font-weight: bold;
+  }
+  .ps-i { color: #00ffff; }
+  .ps-o { color: #ffff00; }
+  .ps-t { color: #aa00ff; }
+  .ps-s { color: #00ff00; }
+  .ps-z { color: #ff0000; }
+  .ps-j { color: #0066ff; }
+  .ps-l { color: #ff8800; }
+  .ps-count {
+    font-size: 1;
+    color: #aaaaaa;
+  }
+</style>
+<div class="ps-container">
+  <span class="ps-title">PIECES</span>
+  <div class="ps-row"><span class="ps-piece ps-i">I</span><span id="ps-i" class="ps-count">0</span></div>
+  <div class="ps-row"><span class="ps-piece ps-o">O</span><span id="ps-o" class="ps-count">0</span></div>
+  <div class="ps-row"><span class="ps-piece ps-t">T</span><span id="ps-t" class="ps-count">0</span></div>
+  <div class="ps-row"><span class="ps-piece ps-s">S</span><span id="ps-s" class="ps-count">0</span></div>
+  <div class="ps-row"><span class="ps-piece ps-z">Z</span><span id="ps-z" class="ps-count">0</span></div>
+  <div class="ps-row"><span class="ps-piece ps-j">J</span><span id="ps-j" class="ps-count">0</span></div>
+  <div class="ps-row"><span class="ps-piece ps-l">L</span><span id="ps-l" class="ps-count">0</span></div>
+</div>
