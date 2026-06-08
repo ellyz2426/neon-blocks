@@ -90,6 +90,16 @@
     <span id="theme-name" class="value">Neon</span>
     <div id="btn-theme-next" class="vol-btn" cursor="pointer"><span class="vol-text">Next</span></div>
   </div>
+  <div class="row">
+    <span class="label">Ghost</span>
+    <div id="btn-ghost" class="vol-btn" cursor="pointer"><span id="ghost-val" class="vol-text">ON</span></div>
+  </div>
+  <div class="row">
+    <span class="label">DAS Speed</span>
+    <div id="btn-das-prev" class="vol-btn" cursor="pointer"><span class="vol-text">-</span></div>
+    <span id="das-val" class="value">Normal</span>
+    <div id="btn-das-next" class="vol-btn" cursor="pointer"><span class="vol-text">+</span></div>
+  </div>
   <div id="btn-back" class="btn-back" cursor="pointer">
     <span class="back-text">BACK</span>
   </div>

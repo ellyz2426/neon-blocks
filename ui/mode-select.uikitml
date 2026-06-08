@@ -78,6 +78,12 @@
   <div id="btn-cascade" class="btn" cursor="pointer">
     <span class="btn-text">CASCADE</span>
   </div>
+  <div id="btn-dig" class="btn" cursor="pointer">
+    <span class="btn-text">DIG (CLEAR GARBAGE)</span>
+  </div>
+  <div id="btn-battle" class="btn" cursor="pointer">
+    <span class="btn-text">BATTLE vs AI</span>
+  </div>
   <div id="btn-back" class="btn btn-back" cursor="pointer">
     <span class="back-text">BACK</span>
   </div>
