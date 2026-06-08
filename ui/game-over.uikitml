@@ -108,6 +108,28 @@
     color: #ff8800;
     font-weight: bold;
   }
+  .perf-row {
+    display: flex;
+    flex-direction: row;
+    width: 28;
+    justify-content: space-between;
+    margin-bottom: 0.5;
+  }
+  .perf-label {
+    font-size: 1.3;
+    color: #aa88ff;
+  }
+  .perf-val {
+    font-size: 1.3;
+    color: #aa88ff;
+    font-weight: bold;
+  }
+  .pb-time {
+    font-size: 1.5;
+    color: #00ff88;
+    font-weight: bold;
+    margin-bottom: 0.5;
+  }
 </style>
 <div class="panel">
   <span class="heading">GAME OVER</span>
@@ -123,7 +145,11 @@
   <div class="row"><span class="label">Triples</span><span id="go-triples" class="value">0</span></div>
   <div class="row"><span class="label">Tetrises</span><span id="go-tetrises" class="value">0</span></div>
   <div class="row"><span class="label">T-Spins</span><span id="go-tspins" class="value">0</span></div>
-  <div id="go-battle-section" class="battle-row"><span class="battle-label">Garbage Sent</span><span id="go-garbage-sent" class="battle-val">0</span></div>
+  <div class="perf-row"><span class="perf-label">PPS</span><span id="go-pps" class="perf-val">0.00</span></div>
+  <div class="perf-row"><span class="perf-label">APM</span><span id="go-apm" class="perf-val">0</span></div>
+  <div id="go-battle-section" class="battle-row"><span class="battle-label">Garbage Sent</span><span id="go-garbage-sent" class="battle-val"></span></div>
+  <span id="go-sprint-pb" class="pb-time"></span>
+  <span id="go-dig-pb" class="pb-time"></span>
   <div class="xp-row">
     <span class="xp-label">XP Earned: </span>
     <span id="go-xp" class="xp-val">0</span>

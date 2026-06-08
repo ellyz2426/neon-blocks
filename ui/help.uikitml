@@ -90,6 +90,15 @@
   <span class="text">Cascade: Cleared blocks trigger cascades</span>
   <span class="text">Dig: Clear 8 rows of garbage ASAP</span>
   <span class="text">Battle: Survive AI garbage attacks</span>
+  <span class="text">Classic: No hold, no ghost, no wall kicks</span>
+  <span class="section">Power-Ups</span>
+  <span class="text">Earn power-ups with combo x3+</span>
+  <span class="text">Bomb: Clears bottom 3 rows</span>
+  <span class="text">Laser: Clears lowest non-empty row</span>
+  <span class="text">Freeze: Halves drop speed for 10 sec</span>
+  <span class="section">Performance Stats</span>
+  <span class="text">PPS: Pieces placed per second</span>
+  <span class="text">APM: Actions (moves/rotations) per minute</span>
   <div id="btn-back" class="btn-back" cursor="pointer">
     <span class="back-text">BACK</span>
   </div>

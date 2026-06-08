@@ -1,0 +1,15 @@
+{
+  "classes": {},
+  "ranges": {
+    "uid-1": {
+      "start": {
+        "line": 0,
+        "column": 0
+      },
+      "end": {
+        "line": 9,
+        "column": 11
+      }
+    }
+  }
+}

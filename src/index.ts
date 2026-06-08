@@ -10,7 +10,16 @@ import {
 
 // ─── TYPES & CONSTANTS ───────────────────────────────────────────────
 type GameState = 'title' | 'modeSelect' | 'difficulty' | 'countdown' | 'playing' | 'paused' | 'gameOver' | 'leaderboard' | 'achievements' | 'stats' | 'settings' | 'help' | 'skins';
-type GameMode = 'marathon' | 'sprint' | 'ultra' | 'survival' | 'zen' | 'blitz' | 'daily' | 'cascade' | 'dig' | 'battle';
+type GameMode = 'marathon' | 'sprint' | 'ultra' | 'survival' | 'zen' | 'blitz' | 'daily' | 'cascade' | 'dig' | 'battle' | 'classic';
+
+function fmtNum(n: number): string {
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+function fmtTime(ms: number): string {
+  const secs = Math.floor(ms / 1000);
+  const mins = Math.floor(secs / 60);
+  return `${mins}:${(secs % 60).toString().padStart(2, '0')}`;
+}
 type PieceType = 'I' | 'O' | 'T' | 'S' | 'Z' | 'J' | 'L';
 
 const COLS = 10, ROWS = 20;
@@ -251,6 +260,40 @@ const ACHIEVEMENTS: Achievement[] = [
   // All skins/themes expanded
   { id: 'all_12_themes', name: 'Interior Designer', desc: 'Try all 12 holodeck themes' },
   { id: 'all_12_skins', name: 'Fashionista', desc: 'Try all 12 block skins' },
+
+  // Classic mode
+  { id: 'classic_clear', name: 'Classicist', desc: 'Complete a Classic game at L10+' },
+  { id: 'classic_10k', name: 'Classic Bronze', desc: 'Score 10,000 in Classic' },
+  { id: 'classic_50k', name: 'Classic Silver', desc: 'Score 50,000 in Classic' },
+  { id: 'classic_100k', name: 'Classic Gold', desc: 'Score 100,000 in Classic' },
+  { id: 'classic_no_tspin', name: 'Old School', desc: 'Classic L15+ without T-Spins' },
+
+  // Speed/efficiency
+  { id: 'pps_1', name: 'Speedy', desc: 'Average 1.0+ PPS in a game' },
+  { id: 'pps_2', name: 'Lightning Fingers', desc: 'Average 2.0+ PPS in a game' },
+  { id: 'pps_3', name: 'Hyperspeed Hands', desc: 'Average 3.0+ PPS in a game' },
+
+  // Marathon milestones
+  { id: 'marathon_100', name: 'Marathon Century', desc: 'Clear 100 lines in Marathon' },
+  { id: 'marathon_200', name: 'Marathon Bicentennial', desc: 'Clear 200 lines in Marathon' },
+
+  // Sprint PB
+  { id: 'sprint_under_45', name: 'Sprint Ace', desc: 'Sprint 40 under 45 seconds' },
+
+  // Score milestones
+  { id: 'score_2m', name: 'Two Million', desc: 'Score 2,000,000 total' },
+  { id: 'score_10m', name: 'Ten Million', desc: 'Score 10,000,000 total' },
+
+  // Time played
+  { id: 'playtime_1h', name: 'Dedicated Player', desc: 'Play for 1 hour total' },
+  { id: 'playtime_5h', name: 'Tetris Addict', desc: 'Play for 5 hours total' },
+  { id: 'playtime_10h', name: 'Tetris Lifestyle', desc: 'Play for 10 hours total' },
+
+  // Miscellaneous
+  { id: 'all_11_modes', name: 'Ultimate Explorer', desc: 'Play all 11 game modes' },
+  { id: 'first_zone_5', name: 'Zone Novice', desc: 'Clear 5+ lines in first Zone' },
+  { id: 'tspin_triple', name: 'T-Spin Triple', desc: 'T-Spin + clear 3 lines' },
+  { id: 'zone_8_plus', name: 'Zone Expert', desc: 'Clear 8+ lines in Zone 3 times' },
 ];
 
 // ─── SAVE DATA ─────────────────────────────────────────────────────
@@ -266,6 +309,7 @@ interface SaveData {
     powerUpsUsed: number; battleBestMs: number; digBestMs: number; garbageSent: number;
     holdUsedCount: number; zoneActivations: number; bestZoneLines: number;
     pieceCounts: Record<string, number>;
+    sprintBestMs: number; classicBestScore: number; totalActions: number;
   };
   settings: { masterVol: number; sfxVol: number; musicVol: number; themeIdx: number; skinIdx: number; difficulty: number; ghostVisible: boolean; dasLevel: number };
   xp: number; playerLevel: number;
@@ -281,6 +325,7 @@ function defaultSave(): SaveData {
       powerUpsUsed: 0, battleBestMs: 0, digBestMs: 0, garbageSent: 0,
       holdUsedCount: 0, zoneActivations: 0, bestZoneLines: 0,
       pieceCounts: { I: 0, O: 0, T: 0, S: 0, Z: 0, J: 0, L: 0 },
+      sprintBestMs: 0, classicBestScore: 0, totalActions: 0,
     },
     settings: { masterVol: 100, sfxVol: 100, musicVol: 100, themeIdx: 0, skinIdx: 0, difficulty: 1, ghostVisible: true, dasLevel: 1 },
   };
@@ -868,6 +913,7 @@ async function main() {
   let zoneLinesCleared = 0;
   let zonePendingRows: number[] = []; // rows cleared during Zone, held until exit
   let gamePieceCounts: Record<string, number> = { I: 0, O: 0, T: 0, S: 0, Z: 0, J: 0, L: 0 };
+  let gameActions = 0; // track total key/button presses for APM
 
   // Combo intensity (for border glow)
   let comboIntensity = 0;
@@ -1140,14 +1186,17 @@ async function main() {
         gameTspins++;
         save.stats.tspins++;
         audio.tSpin();
-        showLineClearText('T-SPIN!');
+        const tSpinLabel = linesToClear.length >= 3 ? 'T-SPIN TRIPLE!' : linesToClear.length === 2 ? 'T-SPIN DOUBLE!' : linesToClear.length === 1 ? 'T-SPIN SINGLE!' : 'T-SPIN!';
+        showLineClearText(tSpinLabel);
         checkAchievement('first_tspin');
         if (save.stats.tspins >= 10) checkAchievement('ten_tspins');
         if (save.stats.tspins >= 25) checkAchievement('twenty_five_tspins');
         if (save.stats.tspins >= 50) checkAchievement('fifty_tspins');
+        if (linesToClear.length >= 3) checkAchievement('tspin_triple');
       }
       pts = Math.floor(pts * b2bMult);
       gameScore += pts;
+      showScorePopup(pts);
 
       gameCombo++;
       if (gameCombo > 0) {
@@ -1235,7 +1284,7 @@ async function main() {
       if (gameCombo >= 30) checkAchievement('combo_30');
 
       // Level up
-      if (gameMode === 'marathon' || gameMode === 'survival') {
+      if (gameMode === 'marathon' || gameMode === 'survival' || gameMode === 'classic') {
         const newLevel = Math.floor(gameLines / 10) + 1 + (difficulty === 0 ? 0 : difficulty === 2 ? 2 : 0);
         if (newLevel > gameLevel) {
           gameLevel = newLevel;
@@ -1378,6 +1427,11 @@ async function main() {
   }
 
   function getDropInterval(): number {
+    // Classic mode: NES-style gravity curve (faster than normal)
+    if (gameMode === 'classic') {
+      const classicSpeeds: Record<number, number> = { 1: 0.8, 2: 0.72, 3: 0.63, 4: 0.55, 5: 0.47, 6: 0.38, 7: 0.3, 8: 0.22, 9: 0.17, 10: 0.1, 11: 0.1, 12: 0.1, 13: 0.08, 14: 0.08, 15: 0.08, 16: 0.07, 17: 0.07, 18: 0.07, 19: 0.05, 20: 0.03 };
+      return classicSpeeds[Math.min(gameLevel, 20)] || 0.03;
+    }
     const base = gameMode === 'zen' ? 999 : (difficulty === 0 ? 1.2 : difficulty === 2 ? 0.6 : 0.8);
     const speedup = gameMode === 'survival' || gameMode === 'battle' ? 0.06 : 0.04;
     const interval = Math.max(0.05, base - (gameLevel - 1) * speedup);
@@ -1580,6 +1634,7 @@ async function main() {
     while (fits(shape, curCol, curRow - 1)) { curRow--; dropped++; }
     gameScore += dropped * 2;
     gameHardDrops++;
+    gameActions++;
     save.stats.hardDrops++;
     // Drop trail VFX
     if (dropped > 2) {
@@ -1614,6 +1669,7 @@ async function main() {
       curCol += dir;
       if (isLocking && lockResets < 15) { lockTimer = 0; lockResets++; }
       audio.move();
+      gameActions++;
       updatePieceVisuals();
     }
   }
@@ -1623,6 +1679,19 @@ async function main() {
     if (numRots <= 1) return;
     const newRot = ((curRotation + dir) % numRots + numRots) % numRots;
     const newShape = PIECE_SHAPES[curType][newRot];
+
+    // Classic mode: no wall kicks, just try basic rotation
+    if (gameMode === 'classic') {
+      if (fits(newShape, curCol, curRow)) {
+        curRotation = newRot;
+        if (isLocking && lockResets < 15) { lockTimer = 0; lockResets++; }
+        audio.rotate();
+        gameActions++;
+        updatePieceVisuals();
+      }
+      return;
+    }
+
     const kicks = curType === 'I' ? KICK_I : KICK_JLSTZ;
     const kickIdx = dir > 0 ? curRotation : ((curRotation - 1 + numRots) % numRots);
     const kickData = kicks[kickIdx % kicks.length];
@@ -1636,6 +1705,7 @@ async function main() {
         curRotation = newRot;
         if (isLocking && lockResets < 15) { lockTimer = 0; lockResets++; }
         audio.rotate();
+        gameActions++;
         updatePieceVisuals();
         return;
       }
@@ -1644,6 +1714,7 @@ async function main() {
 
   function holdPiece() {
     if (holdUsed) return;
+    if (gameMode === 'classic') return; // No hold in Classic mode
     holdUsed = true;
     holdUsedThisGame = true;
     save.stats.holdUsedCount++;
@@ -1675,7 +1746,7 @@ async function main() {
     const color = PIECE_COLORS[curType];
     drawPiece(shape, curCol, curRow, color);
     const ghostRow = getGhostRow();
-    if (ghostRow !== curRow && save.settings.ghostVisible) drawGhost(shape, curCol, ghostRow, color);
+    if (ghostRow !== curRow && save.settings.ghostVisible && gameMode !== 'classic') drawGhost(shape, curCol, ghostRow, color);
     else clearGhost();
   }
 
@@ -1743,6 +1814,7 @@ async function main() {
   createPanel('zoneMeter', '/ui/zone-meter.json', { screenSpace: true, ssWidth: '10vw', ssBottom: '24px', ssLeft: '24px', width: 0.12, height: 0.12 });
   createPanel('zoneActive', '/ui/zone-active.json', { follower: true, width: 0.35, height: 0.12 });
   createPanel('pieceStats', '/ui/piece-stats.json', { screenSpace: true, ssWidth: '8vw', ssBottom: '200px', ssLeft: '24px', width: 0.1, height: 0.25 });
+  createPanel('scorePopup', '/ui/score-popup.json', { follower: true, width: 0.25, height: 0.06 });
 
   function showPanel(id: string) {
     panelEntities.forEach((e, key) => { e.object3D.visible = key === id; });
@@ -1779,6 +1851,17 @@ async function main() {
     lineClearTimer = 1.5;
     const doc = entity.getValue(PanelDocument, 'document') as UIKitDocument | undefined;
     if (doc) { const el = doc.getElementById('line-clear-text'); if (el) el.text.value = text; }
+  }
+
+  // Score popup display
+  let scorePopupTimer = 0;
+  function showScorePopup(points: number) {
+    const entity = panelEntities.get('scorePopup');
+    if (!entity) return;
+    entity.object3D.visible = true;
+    scorePopupTimer = 1.2;
+    const doc = entity.getValue(PanelDocument, 'document') as UIKitDocument | undefined;
+    if (doc) { const el = doc.getElementById('score-popup-text'); if (el) el.text.value = `+${fmtNum(points)}`; }
   }
 
   // Level up display
@@ -1830,7 +1913,7 @@ async function main() {
 
   // ─── LEADERBOARD ──────────────────────────────────────────────
   let lbFilterMode: string = 'ALL';
-  const lbModes = ['ALL', 'marathon', 'sprint', 'ultra', 'survival', 'zen', 'blitz', 'daily', 'cascade'];
+  const lbModes = ['ALL', 'marathon', 'sprint', 'ultra', 'survival', 'zen', 'blitz', 'daily', 'cascade', 'dig', 'battle', 'classic'];
   let lbModeIdx = 0;
 
   function updateLeaderboardPanel() {
@@ -1843,7 +1926,7 @@ async function main() {
       const entry = lb[i];
       const s = doc.getElementById(`lb-s${i + 1}`);
       const m = doc.getElementById(`lb-m${i + 1}`);
-      if (s) s.text.value = entry ? `${entry.score}` : '-';
+      if (s) s.text.value = entry ? `${fmtNum(entry.score)}` : '-';
       if (m) m.text.value = entry ? `${entry.mode} L${entry.level}` : '-';
     }
     const modeLabel = doc.getElementById('lb-filter-mode');
@@ -1857,26 +1940,28 @@ async function main() {
     if (!doc) return;
     const s = save.stats;
     const setText = (id: string, val: string) => { const el = doc.getElementById(id); if (el) el.text.value = val; };
-    setText('st-games', `${s.games}`);
-    setText('st-total-score', `${s.totalScore}`);
-    setText('st-best-score', `${s.bestScore}`);
-    setText('st-total-lines', `${s.totalLines}`);
+    setText('st-games', `${fmtNum(s.games)}`);
+    setText('st-total-score', `${fmtNum(s.totalScore)}`);
+    setText('st-best-score', `${fmtNum(s.bestScore)}`);
+    setText('st-total-lines', `${fmtNum(s.totalLines)}`);
     setText('st-best-level', `${s.bestLevel}`);
     setText('st-playtime', `${Math.floor(s.playTimeMs / 60000)}m`);
     setText('st-player-level', `${save.playerLevel}`);
-    setText('st-singles', `${s.singles || 0}`);
-    setText('st-doubles', `${s.doubles || 0}`);
-    setText('st-triples', `${s.triples || 0}`);
-    setText('st-tetrises', `${s.tetrises}`);
-    setText('st-tspins', `${s.tspins}`);
-    setText('st-perfects', `${s.perfectClears || 0}`);
+    setText('st-singles', `${fmtNum(s.singles || 0)}`);
+    setText('st-doubles', `${fmtNum(s.doubles || 0)}`);
+    setText('st-triples', `${fmtNum(s.triples || 0)}`);
+    setText('st-tetrises', `${fmtNum(s.tetrises)}`);
+    setText('st-tspins', `${fmtNum(s.tspins)}`);
+    setText('st-perfects', `${fmtNum(s.perfectClears || 0)}`);
     setText('st-best-combo', `${s.bestCombo}`);
-    setText('st-pieces', `${s.piecesPlaced}`);
-    setText('st-hard-drops', `${s.hardDrops || 0}`);
+    setText('st-pieces', `${fmtNum(s.piecesPlaced)}`);
+    setText('st-hard-drops', `${fmtNum(s.hardDrops || 0)}`);
     setText('st-best-cascade', `${s.bestCascade || 0}`);
     setText('st-achievements', `${save.achievements.length}/${ACHIEVEMENTS.length}`);
-    setText('st-zone-uses', `${save.stats.zoneActivations || 0}`);
+    setText('st-zone-uses', `${fmtNum(save.stats.zoneActivations || 0)}`);
     setText('st-zone-best', `${save.stats.bestZoneLines || 0}`);
+    setText('st-sprint-pb', save.stats.sprintBestMs > 0 ? fmtTime(save.stats.sprintBestMs) : '-');
+    setText('st-dig-pb', save.stats.digBestMs > 0 ? fmtTime(save.stats.digBestMs) : '-');
   }
 
   // ─── SETTINGS PANEL ──────────────────────────────────────────
@@ -1899,9 +1984,9 @@ async function main() {
     const doc = entity.getValue(PanelDocument, 'document') as UIKitDocument | undefined;
     if (!doc) return;
     const setText = (id: string, val: string) => { const el = doc.getElementById(id); if (el) el.text.value = val; };
-    setText('hud-score', `${gameScore}`);
+    setText('hud-score', `${fmtNum(gameScore)}`);
     setText('hud-level', `${gameLevel}`);
-    setText('hud-lines', `${gameLines}`);
+    setText('hud-lines', `${fmtNum(gameLines)}`);
     setText('hud-combo', gameCombo > 0 ? `x${gameCombo}` : '0');
     const secs = Math.floor(gameTimeMs / 1000);
     const mins = Math.floor(secs / 60);
@@ -1962,6 +2047,7 @@ async function main() {
     zoneLinesCleared = 0;
     zonePendingRows = [];
     gamePieceCounts = { I: 0, O: 0, T: 0, S: 0, Z: 0, J: 0, L: 0 };
+    gameActions = 0;
     gameLevel = difficulty === 0 ? 1 : difficulty === 2 ? 3 : 1;
     prevGameLevel = gameLevel;
     lockTimer = 0; isLocking = false; lockResets = 0;
@@ -2028,6 +2114,11 @@ async function main() {
       if (save.stats.digBestMs === 0 || gameTimeMs < save.stats.digBestMs) save.stats.digBestMs = gameTimeMs;
     }
 
+    // Sprint PB
+    if (gameMode === 'sprint' && gameLines >= 40) {
+      if (save.stats.sprintBestMs === 0 || gameTimeMs < save.stats.sprintBestMs) save.stats.sprintBestMs = gameTimeMs;
+    }
+
     // Battle mode stats
     if (gameMode === 'battle') {
       if (gameTimeMs >= 60000) checkAchievement('battle_1min');
@@ -2035,6 +2126,16 @@ async function main() {
       if (gameTimeMs >= 300000) checkAchievement('battle_5min');
       if (gameTimeMs >= 600000) checkAchievement('battle_10min');
       if (save.stats.battleBestMs === 0 || gameTimeMs > save.stats.battleBestMs) save.stats.battleBestMs = gameTimeMs;
+    }
+
+    // Classic mode achievements
+    if (gameMode === 'classic') {
+      if (gameLevel >= 10) checkAchievement('classic_clear');
+      if (gameScore >= 10000) checkAchievement('classic_10k');
+      if (gameScore >= 50000) checkAchievement('classic_50k');
+      if (gameScore >= 100000) checkAchievement('classic_100k');
+      if (gameLevel >= 15 && gameTspins === 0) checkAchievement('classic_no_tspin');
+      if (gameScore > (save.stats.classicBestScore || 0)) save.stats.classicBestScore = gameScore;
     }
     if (gameLevel > save.stats.bestLevel) save.stats.bestLevel = gameLevel;
     if (maxCombo > save.stats.bestCombo) save.stats.bestCombo = maxCombo;
@@ -2097,10 +2198,31 @@ async function main() {
     if (save.settings.skinIdx > 0) checkAchievement('skin_used');
     if (save.stats.modesPlayed.length >= 8) checkAchievement('all_modes');
     if (save.stats.modesPlayed.length >= 10) checkAchievement('all_10_modes');
+    if (save.stats.modesPlayed.length >= 11) checkAchievement('all_11_modes');
     if (save.stats.games >= 250) checkAchievement('games_250');
     if (save.stats.totalScore >= 5000000) checkAchievement('score_5m');
+    if (save.stats.totalScore >= 2000000) checkAchievement('score_2m');
+    if (save.stats.totalScore >= 10000000) checkAchievement('score_10m');
     if (save.stats.totalLines >= 10000) checkAchievement('ten_thousand_lines');
+    if (save.stats.playTimeMs >= 3600000) checkAchievement('playtime_1h');
+    if (save.stats.playTimeMs >= 18000000) checkAchievement('playtime_5h');
+    if (save.stats.playTimeMs >= 36000000) checkAchievement('playtime_10h');
     if (gameMode === 'marathon' && gameLevel >= 20) checkAchievement('marathon_lvl_20');
+    if (gameMode === 'marathon' && gameLines >= 100) checkAchievement('marathon_100');
+    if (gameMode === 'marathon' && gameLines >= 200) checkAchievement('marathon_200');
+
+    // PPS achievements
+    const gamePPS = gameTimeMs > 0 ? (gamePieces / (gameTimeMs / 1000)) : 0;
+    if (gamePPS >= 1.0 && gamePieces >= 20) checkAchievement('pps_1');
+    if (gamePPS >= 2.0 && gamePieces >= 20) checkAchievement('pps_2');
+    if (gamePPS >= 3.0 && gamePieces >= 20) checkAchievement('pps_3');
+
+    // Sprint PB achievements
+    if (gameMode === 'sprint' && gameLines >= 40) {
+      if (gameTimeMs < 45000) checkAchievement('sprint_under_45');
+    }
+
+    save.stats.totalActions = (save.stats.totalActions || 0) + gameActions;
     if (difficulty === 2) checkAchievement('hard_mode');
     if (save.playerLevel >= 3) checkAchievement('plvl_3');
     if (save.playerLevel >= 5) checkAchievement('plvl_5');
@@ -2126,9 +2248,9 @@ async function main() {
       const doc = goEntity.getValue(PanelDocument, 'document') as UIKitDocument | undefined;
       if (!doc) return;
       const setText = (id: string, val: string) => { const el = doc.getElementById(id); if (el) el.text.value = val; };
-      setText('go-score', `${gameScore}`);
+      setText('go-score', `${fmtNum(gameScore)}`);
       setText('go-level', `${gameLevel}`);
-      setText('go-lines', `${gameLines}`);
+      setText('go-lines', `${fmtNum(gameLines)}`);
       setText('go-combo', `${maxCombo}`);
       const secs = Math.floor(gameTimeMs / 1000);
       setText('go-time', `${Math.floor(secs / 60)}:${(secs % 60).toString().padStart(2, '0')}`);
@@ -2137,10 +2259,22 @@ async function main() {
       setText('go-triples', `${gameTriples}`);
       setText('go-tetrises', `${gameTetrises}`);
       setText('go-tspins', `${gameTspins}`);
-      setText('go-xp', `+${xpEarned}`);
+      setText('go-xp', `+${fmtNum(xpEarned)}`);
       setText('go-pb', isNewBest ? '★ NEW BEST! ★' : '');
       setText('go-dig-win', (gameMode === 'dig' && digWon) ? 'DIG COMPLETE!' : '');
       setText('go-garbage-sent', gameMode === 'battle' ? `${battleGarbageSent}` : '');
+      // PPS / APM
+      const pps = gameTimeMs > 0 ? (gamePieces / (gameTimeMs / 1000)).toFixed(2) : '0.00';
+      const apm = gameTimeMs > 0 ? Math.round(gameActions / (gameTimeMs / 60000)) : 0;
+      setText('go-pps', `${pps}`);
+      setText('go-apm', `${apm}`);
+      // Sprint/Dig PB
+      if (gameMode === 'sprint' && gameLines >= 40) {
+        setText('go-sprint-pb', save.stats.sprintBestMs > 0 ? `PB: ${fmtTime(save.stats.sprintBestMs)}` : '');
+      }
+      if (gameMode === 'dig' && digWon) {
+        setText('go-dig-pb', save.stats.digBestMs > 0 ? `PB: ${fmtTime(save.stats.digBestMs)}` : '');
+      }
     }, 100);
   }
 
@@ -2167,7 +2301,7 @@ async function main() {
   wireButton('title', 'btn-help', () => { gameState = 'help'; showPanel('help'); });
 
   // Mode select
-  const modes: [string, GameMode][] = [['btn-marathon', 'marathon'], ['btn-sprint', 'sprint'], ['btn-ultra', 'ultra'], ['btn-survival', 'survival'], ['btn-zen', 'zen'], ['btn-blitz', 'blitz'], ['btn-daily', 'daily'], ['btn-cascade', 'cascade'], ['btn-dig', 'dig'], ['btn-battle', 'battle']];
+  const modes: [string, GameMode][] = [['btn-marathon', 'marathon'], ['btn-sprint', 'sprint'], ['btn-ultra', 'ultra'], ['btn-survival', 'survival'], ['btn-zen', 'zen'], ['btn-blitz', 'blitz'], ['btn-daily', 'daily'], ['btn-cascade', 'cascade'], ['btn-dig', 'dig'], ['btn-battle', 'battle'], ['btn-classic', 'classic']];
   for (const [btnId, mode] of modes) {
     wireButton('modeSelect', btnId, () => { gameMode = mode; gameState = 'difficulty'; showPanel('difficulty'); });
   }
@@ -2394,6 +2528,12 @@ async function main() {
     if (levelUpTimer > 0) {
       levelUpTimer -= dt;
       if (levelUpTimer <= 0) panelEntities.get('levelUp')!.object3D.visible = false;
+    }
+
+    // Score popup timer
+    if (scorePopupTimer > 0) {
+      scorePopupTimer -= dt;
+      if (scorePopupTimer <= 0) { const sp = panelEntities.get('scorePopup'); if (sp) sp.object3D.visible = false; }
     }
 
     // Border glow handled in playing state with combo intensity

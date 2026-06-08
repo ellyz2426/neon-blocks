@@ -76,6 +76,9 @@
   <span class="section">ZONE</span>
   <div class="row"><span class="label">Zone Uses</span><span id="st-zone-uses" class="value">0</span></div>
   <div class="row"><span class="label">Best Zone Lines</span><span id="st-zone-best" class="value">0</span></div>
+  <span class="section">RECORDS</span>
+  <div class="row"><span class="label">Sprint PB</span><span id="st-sprint-pb" class="value">-</span></div>
+  <div class="row"><span class="label">Dig PB</span><span id="st-dig-pb" class="value">-</span></div>
   <div id="btn-back" class="btn-back" cursor="pointer">
     <span class="back-text">BACK</span>
   </div>

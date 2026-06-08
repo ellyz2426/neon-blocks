@@ -1,0 +1,10 @@
+<template>
+  <container
+    flexDirection="column"
+    alignItems="center"
+    justifyContent="center"
+    padding="4"
+  >
+    <text id="score-popup-text" fontSize="18" fontWeight="bold" color="#ffcc00">+0</text>
+  </container>
+</template>

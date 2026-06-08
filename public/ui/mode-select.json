@@ -252,12 +252,35 @@
             "sourceTag": "span",
             "type": "custom",
             "children": [
+              "CLASSIC"
+            ],
+            "properties": {
+              "class": "btn-text"
+            },
+            "dataUid": "uid-24"
+          }
+        ],
+        "properties": {
+          "id": "btn-classic",
+          "class": "btn",
+          "cursor": "pointer"
+        },
+        "dataUid": "uid-23"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
               "BACK"
             ],
             "properties": {
               "class": "back-text"
             },
-            "dataUid": "uid-24"
+            "dataUid": "uid-26"
           }
         ],
         "properties": {
@@ -265,7 +288,7 @@
           "class": "btn btn-back",
           "cursor": "pointer"
         },
-        "dataUid": "uid-23"
+        "dataUid": "uid-25"
       }
     ],
     "properties": {
@@ -418,7 +441,7 @@
         "column": 0
       },
       "end": {
-        "line": 89,
+        "line": 92,
         "column": 6
       }
     },
@@ -649,6 +672,26 @@
       },
       "end": {
         "line": 87,
+        "column": 41
+      }
+    },
+    "uid-25": {
+      "start": {
+        "line": 89,
+        "column": 2
+      },
+      "end": {
+        "line": 91,
+        "column": 8
+      }
+    },
+    "uid-26": {
+      "start": {
+        "line": 90,
+        "column": 4
+      },
+      "end": {
+        "line": 90,
         "column": 39
       }
     }

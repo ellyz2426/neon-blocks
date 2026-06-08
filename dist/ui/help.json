@@ -488,6 +488,105 @@
         "dataUid": "uid-45"
       },
       {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Classic: No hold, no ghost, no wall kicks"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-46"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Power-Ups"
+        ],
+        "properties": {
+          "class": "section"
+        },
+        "dataUid": "uid-47"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Earn power-ups with combo x3+"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-48"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Bomb: Clears bottom 3 rows"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-49"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Laser: Clears lowest non-empty row"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-50"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Freeze: Halves drop speed for 10 sec"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-51"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "Performance Stats"
+        ],
+        "properties": {
+          "class": "section"
+        },
+        "dataUid": "uid-52"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "PPS: Pieces placed per second"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-53"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "APM: Actions (moves/rotations) per minute"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-54"
+      },
+      {
         "type": "container",
         "sourceTag": "div",
         "children": [
@@ -500,7 +599,7 @@
             "properties": {
               "class": "back-text"
             },
-            "dataUid": "uid-47"
+            "dataUid": "uid-56"
           }
         ],
         "properties": {
@@ -508,7 +607,7 @@
           "class": "btn-back",
           "cursor": "pointer"
         },
-        "dataUid": "uid-46"
+        "dataUid": "uid-55"
       }
     ],
     "properties": {
@@ -646,7 +745,7 @@
         "column": 0
       },
       "end": {
-        "line": 95,
+        "line": 104,
         "column": 6
       }
     },
@@ -1096,17 +1195,107 @@
         "column": 2
       },
       "end": {
-        "line": 94,
-        "column": 8
+        "line": 92,
+        "column": 69
       }
     },
     "uid-47": {
       "start": {
         "line": 93,
-        "column": 4
+        "column": 2
       },
       "end": {
         "line": 93,
+        "column": 40
+      }
+    },
+    "uid-48": {
+      "start": {
+        "line": 94,
+        "column": 2
+      },
+      "end": {
+        "line": 94,
+        "column": 57
+      }
+    },
+    "uid-49": {
+      "start": {
+        "line": 95,
+        "column": 2
+      },
+      "end": {
+        "line": 95,
+        "column": 54
+      }
+    },
+    "uid-50": {
+      "start": {
+        "line": 96,
+        "column": 2
+      },
+      "end": {
+        "line": 96,
+        "column": 62
+      }
+    },
+    "uid-51": {
+      "start": {
+        "line": 97,
+        "column": 2
+      },
+      "end": {
+        "line": 97,
+        "column": 64
+      }
+    },
+    "uid-52": {
+      "start": {
+        "line": 98,
+        "column": 2
+      },
+      "end": {
+        "line": 98,
+        "column": 48
+      }
+    },
+    "uid-53": {
+      "start": {
+        "line": 99,
+        "column": 2
+      },
+      "end": {
+        "line": 99,
+        "column": 57
+      }
+    },
+    "uid-54": {
+      "start": {
+        "line": 100,
+        "column": 2
+      },
+      "end": {
+        "line": 100,
+        "column": 69
+      }
+    },
+    "uid-55": {
+      "start": {
+        "line": 101,
+        "column": 2
+      },
+      "end": {
+        "line": 103,
+        "column": 8
+      }
+    },
+    "uid-56": {
+      "start": {
+        "line": 102,
+        "column": 4
+      },
+      "end": {
+        "line": 102,
         "column": 39
       }
     }
