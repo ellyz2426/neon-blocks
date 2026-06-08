@@ -16,8 +16,29 @@
     font-size: 3;
     color: #ffc800;
     font-weight: bold;
+    margin-bottom: 0.5;
+  }
+  .filter-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     margin-bottom: 1;
   }
+  .filter-btn {
+    padding-top: 0.4;
+    padding-bottom: 0.4;
+    padding-left: 1.5;
+    padding-right: 1.5;
+    margin-left: 0.3;
+    margin-right: 0.3;
+    background-color: rgba(255,200,0,0.08);
+    border-color: #ffc800;
+    border-width: 0.06;
+    border-radius: 0.3;
+    cursor: pointer;
+  }
+  .filter-text { font-size: 1; color: #ffc800; font-weight: bold; }
+  .filter-label { font-size: 1.2; color: #888888; margin-right: 0.5; }
   .row {
     display: flex;
     flex-direction: row;
@@ -28,7 +49,6 @@
   .rank { font-size: 1.3; color: #ffc800; }
   .score-val { font-size: 1.3; color: #00ffff; font-weight: bold; }
   .mode-val { font-size: 1.3; color: #888888; }
-  .date-val { font-size: 1.1; color: #666666; }
   .btn-back {
     display: flex;
     align-items: center;
@@ -36,7 +56,7 @@
     width: 20;
     padding-top: 1;
     padding-bottom: 1;
-    margin-top: 1.5;
+    margin-top: 1;
     background-color: rgba(255,100,100,0.1);
     border-color: #ff6464;
     border-width: 0.08;
@@ -47,6 +67,13 @@
 </style>
 <div class="panel">
   <span class="heading">LEADERBOARD</span>
+  <div class="filter-row">
+    <span class="filter-label">Filter:</span>
+    <div id="lb-filter-all" class="filter-btn" cursor="pointer"><span class="filter-text">ALL</span></div>
+    <div id="lb-filter-prev" class="filter-btn" cursor="pointer"><span class="filter-text">&lt;</span></div>
+    <span id="lb-filter-mode" class="filter-text">ALL</span>
+    <div id="lb-filter-next" class="filter-btn" cursor="pointer"><span class="filter-text">&gt;</span></div>
+  </div>
   <div class="row"><span class="rank">#1</span><span id="lb-s1" class="score-val">-</span><span id="lb-m1" class="mode-val">-</span></div>
   <div class="row"><span class="rank">#2</span><span id="lb-s2" class="score-val">-</span><span id="lb-m2" class="mode-val">-</span></div>
   <div class="row"><span class="rank">#3</span><span id="lb-s3" class="score-val">-</span><span id="lb-m3" class="mode-val">-</span></div>

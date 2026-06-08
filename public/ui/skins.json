@@ -29,7 +29,6 @@
                   "Neon"
                 ],
                 "properties": {
-                  "id": "skin-n0",
                   "class": "skin-text"
                 },
                 "dataUid": "uid-5"
@@ -53,7 +52,6 @@
                   "Crystal"
                 ],
                 "properties": {
-                  "id": "skin-n1",
                   "class": "skin-text"
                 },
                 "dataUid": "uid-7"
@@ -87,7 +85,6 @@
                   "Hologram"
                 ],
                 "properties": {
-                  "id": "skin-n2",
                   "class": "skin-text"
                 },
                 "dataUid": "uid-10"
@@ -111,7 +108,6 @@
                   "Plasma"
                 ],
                 "properties": {
-                  "id": "skin-n3",
                   "class": "skin-text"
                 },
                 "dataUid": "uid-12"
@@ -145,7 +141,6 @@
                   "Void"
                 ],
                 "properties": {
-                  "id": "skin-n4",
                   "class": "skin-text"
                 },
                 "dataUid": "uid-15"
@@ -169,7 +164,6 @@
                   "Solar"
                 ],
                 "properties": {
-                  "id": "skin-n5",
                   "class": "skin-text"
                 },
                 "dataUid": "uid-17"
@@ -193,6 +187,118 @@
         "sourceTag": "div",
         "children": [
           {
+            "type": "container",
+            "sourceTag": "div",
+            "children": [
+              {
+                "sourceTag": "span",
+                "type": "custom",
+                "children": [
+                  "Retro"
+                ],
+                "properties": {
+                  "class": "skin-text"
+                },
+                "dataUid": "uid-20"
+              }
+            ],
+            "properties": {
+              "id": "skin-6",
+              "class": "skin-btn",
+              "cursor": "pointer"
+            },
+            "dataUid": "uid-19"
+          },
+          {
+            "type": "container",
+            "sourceTag": "div",
+            "children": [
+              {
+                "sourceTag": "span",
+                "type": "custom",
+                "children": [
+                  "Chrome"
+                ],
+                "properties": {
+                  "class": "skin-text"
+                },
+                "dataUid": "uid-22"
+              }
+            ],
+            "properties": {
+              "id": "skin-7",
+              "class": "skin-btn",
+              "cursor": "pointer"
+            },
+            "dataUid": "uid-21"
+          }
+        ],
+        "properties": {
+          "class": "row"
+        },
+        "dataUid": "uid-18"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "type": "container",
+            "sourceTag": "div",
+            "children": [
+              {
+                "sourceTag": "span",
+                "type": "custom",
+                "children": [
+                  "Nebula"
+                ],
+                "properties": {
+                  "class": "skin-text"
+                },
+                "dataUid": "uid-25"
+              }
+            ],
+            "properties": {
+              "id": "skin-8",
+              "class": "skin-btn",
+              "cursor": "pointer"
+            },
+            "dataUid": "uid-24"
+          },
+          {
+            "type": "container",
+            "sourceTag": "div",
+            "children": [
+              {
+                "sourceTag": "span",
+                "type": "custom",
+                "children": [
+                  "Obsidian"
+                ],
+                "properties": {
+                  "class": "skin-text"
+                },
+                "dataUid": "uid-27"
+              }
+            ],
+            "properties": {
+              "id": "skin-9",
+              "class": "skin-btn",
+              "cursor": "pointer"
+            },
+            "dataUid": "uid-26"
+          }
+        ],
+        "properties": {
+          "class": "row"
+        },
+        "dataUid": "uid-23"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
             "sourceTag": "span",
             "type": "custom",
             "children": [
@@ -201,7 +307,7 @@
             "properties": {
               "class": "back-text"
             },
-            "dataUid": "uid-19"
+            "dataUid": "uid-29"
           }
         ],
         "properties": {
@@ -209,7 +315,7 @@
           "class": "btn-back",
           "cursor": "pointer"
         },
-        "dataUid": "uid-18"
+        "dataUid": "uid-28"
       }
     ],
     "properties": {
@@ -376,7 +482,7 @@
         "column": 0
       },
       "end": {
-        "line": 77,
+        "line": 85,
         "column": 6
       }
     },
@@ -407,7 +513,7 @@
       },
       "end": {
         "line": 63,
-        "column": 109
+        "column": 96
       }
     },
     "uid-5": {
@@ -417,7 +523,7 @@
       },
       "end": {
         "line": 63,
-        "column": 103
+        "column": 90
       }
     },
     "uid-6": {
@@ -427,7 +533,7 @@
       },
       "end": {
         "line": 64,
-        "column": 112
+        "column": 99
       }
     },
     "uid-7": {
@@ -437,7 +543,7 @@
       },
       "end": {
         "line": 64,
-        "column": 106
+        "column": 93
       }
     },
     "uid-8": {
@@ -457,7 +563,7 @@
       },
       "end": {
         "line": 67,
-        "column": 113
+        "column": 100
       }
     },
     "uid-10": {
@@ -467,7 +573,7 @@
       },
       "end": {
         "line": 67,
-        "column": 107
+        "column": 94
       }
     },
     "uid-11": {
@@ -477,7 +583,7 @@
       },
       "end": {
         "line": 68,
-        "column": 111
+        "column": 98
       }
     },
     "uid-12": {
@@ -487,7 +593,7 @@
       },
       "end": {
         "line": 68,
-        "column": 105
+        "column": 92
       }
     },
     "uid-13": {
@@ -507,7 +613,7 @@
       },
       "end": {
         "line": 71,
-        "column": 109
+        "column": 96
       }
     },
     "uid-15": {
@@ -517,7 +623,7 @@
       },
       "end": {
         "line": 71,
-        "column": 103
+        "column": 90
       }
     },
     "uid-16": {
@@ -527,7 +633,7 @@
       },
       "end": {
         "line": 72,
-        "column": 110
+        "column": 97
       }
     },
     "uid-17": {
@@ -537,7 +643,7 @@
       },
       "end": {
         "line": 72,
-        "column": 104
+        "column": 91
       }
     },
     "uid-18": {
@@ -546,7 +652,7 @@
         "column": 2
       },
       "end": {
-        "line": 76,
+        "line": 77,
         "column": 8
       }
     },
@@ -557,6 +663,106 @@
       },
       "end": {
         "line": 75,
+        "column": 97
+      }
+    },
+    "uid-20": {
+      "start": {
+        "line": 75,
+        "column": 55
+      },
+      "end": {
+        "line": 75,
+        "column": 91
+      }
+    },
+    "uid-21": {
+      "start": {
+        "line": 76,
+        "column": 4
+      },
+      "end": {
+        "line": 76,
+        "column": 98
+      }
+    },
+    "uid-22": {
+      "start": {
+        "line": 76,
+        "column": 55
+      },
+      "end": {
+        "line": 76,
+        "column": 92
+      }
+    },
+    "uid-23": {
+      "start": {
+        "line": 78,
+        "column": 2
+      },
+      "end": {
+        "line": 81,
+        "column": 8
+      }
+    },
+    "uid-24": {
+      "start": {
+        "line": 79,
+        "column": 4
+      },
+      "end": {
+        "line": 79,
+        "column": 98
+      }
+    },
+    "uid-25": {
+      "start": {
+        "line": 79,
+        "column": 55
+      },
+      "end": {
+        "line": 79,
+        "column": 92
+      }
+    },
+    "uid-26": {
+      "start": {
+        "line": 80,
+        "column": 4
+      },
+      "end": {
+        "line": 80,
+        "column": 100
+      }
+    },
+    "uid-27": {
+      "start": {
+        "line": 80,
+        "column": 55
+      },
+      "end": {
+        "line": 80,
+        "column": 94
+      }
+    },
+    "uid-28": {
+      "start": {
+        "line": 82,
+        "column": 2
+      },
+      "end": {
+        "line": 84,
+        "column": 8
+      }
+    },
+    "uid-29": {
+      "start": {
+        "line": 83,
+        "column": 4
+      },
+      "end": {
+        "line": 83,
         "column": 39
       }
     }

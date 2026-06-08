@@ -1,0 +1,23 @@
+<style>
+  .lvl-bg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.8;
+    padding-bottom: 0.8;
+    padding-left: 3;
+    padding-right: 3;
+    background-color: rgba(0,0,0,0.7);
+    border-color: #ffc800;
+    border-width: 0.12;
+    border-radius: 0.6;
+  }
+  .lvl-text {
+    font-size: 3.5;
+    color: #ffc800;
+    font-weight: bold;
+  }
+</style>
+<div class="lvl-bg">
+  <span id="lvl-text" class="lvl-text">LEVEL UP!</span>
+</div>

@@ -1,0 +1,90 @@
+{
+  "element": {
+    "type": "container",
+    "sourceTag": "div",
+    "children": [
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "LEVEL UP!"
+        ],
+        "properties": {
+          "id": "lvl-text",
+          "class": "lvl-text"
+        },
+        "dataUid": "uid-2"
+      }
+    ],
+    "properties": {
+      "class": "lvl-bg"
+    },
+    "dataUid": "uid-1"
+  },
+  "classes": {
+    "lvl-bg": {
+      "content": {
+        "display": "flex",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "paddingTop": "0.8",
+        "paddingBottom": "0.8",
+        "paddingLeft": "3",
+        "paddingRight": "3",
+        "backgroundColor": "rgba(0,0,0,0.7)",
+        "borderColor": "#ffc800",
+        "borderWidth": "0.12",
+        "borderRadius": 0.6
+      }
+    },
+    "lvl-text": {
+      "content": {
+        "fontSize": "3.5",
+        "color": "#ffc800",
+        "fontWeight": "bold"
+      }
+    }
+  },
+  "ranges": {
+    "lvl-bg": {
+      "start": {
+        "line": 1,
+        "column": 2
+      },
+      "end": {
+        "line": 1,
+        "column": 9
+      }
+    },
+    "lvl-text": {
+      "start": {
+        "line": 14,
+        "column": 2
+      },
+      "end": {
+        "line": 14,
+        "column": 11
+      }
+    },
+    "uid-1": {
+      "start": {
+        "line": 20,
+        "column": 0
+      },
+      "end": {
+        "line": 22,
+        "column": 6
+      }
+    },
+    "uid-2": {
+      "start": {
+        "line": 21,
+        "column": 2
+      },
+      "end": {
+        "line": 21,
+        "column": 55
+      }
+    }
+  }
+}

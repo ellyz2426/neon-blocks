@@ -14,7 +14,7 @@ type GameMode = 'marathon' | 'sprint' | 'ultra' | 'survival' | 'zen' | 'blitz' |
 type PieceType = 'I' | 'O' | 'T' | 'S' | 'Z' | 'J' | 'L';
 
 const COLS = 10, ROWS = 20;
-const CELL = 0.08; // size of each block in world units
+const CELL = 0.08;
 const PIECE_COLORS: Record<PieceType, number> = {
   I: 0x00ffff, O: 0xffff00, T: 0xaa00ff, S: 0x00ff00, Z: 0xff0000, J: 0x0066ff, L: 0xff8800,
 };
@@ -27,12 +27,11 @@ const PIECE_SHAPES: Record<PieceType, number[][][]> = {
   J: [[[1,0,0],[1,1,1],[0,0,0]],[[0,1,1],[0,1,0],[0,1,0]],[[0,0,0],[1,1,1],[0,0,1]],[[0,1,0],[0,1,0],[1,1,0]]],
   L: [[[0,0,1],[1,1,1],[0,0,0]],[[0,1,0],[0,1,0],[0,1,1]],[[0,0,0],[1,1,1],[1,0,0]],[[1,1,0],[0,1,0],[0,1,0]]],
 };
-// SRS wall kick data (JLSTZ and I separate)
 const KICK_JLSTZ: number[][][] = [
-  [[0,0],[-1,0],[-1,1],[0,-2],[-1,-2]], // 0->1
-  [[0,0],[1,0],[1,-1],[0,2],[1,2]],     // 1->2
-  [[0,0],[1,0],[1,1],[0,-2],[1,-2]],    // 2->3
-  [[0,0],[-1,0],[-1,-1],[0,2],[-1,2]], // 3->0
+  [[0,0],[-1,0],[-1,1],[0,-2],[-1,-2]],
+  [[0,0],[1,0],[1,-1],[0,2],[1,2]],
+  [[0,0],[1,0],[1,1],[0,-2],[1,-2]],
+  [[0,0],[-1,0],[-1,-1],[0,2],[-1,2]],
 ];
 const KICK_I: number[][][] = [
   [[0,0],[-2,0],[1,0],[-2,-1],[1,2]],
@@ -48,6 +47,10 @@ const THEMES = [
   { name: 'Ultra Violet', grid: 0x220033, accent: 0xaa44ff, bg: 0x0a0015, fog: 0x150022, wall: 0x330044 },
   { name: 'Solar', grid: 0x332200, accent: 0xff8800, bg: 0x0a0500, fog: 0x150a00, wall: 0x443300 },
   { name: 'Deep Sea', grid: 0x001133, accent: 0x0088ff, bg: 0x000510, fog: 0x000a15, wall: 0x002244 },
+  { name: 'Arctic', grid: 0x1a2a33, accent: 0x88ddff, bg: 0x050a0f, fog: 0x0a1520, wall: 0x2a3a44 },
+  { name: 'Midnight', grid: 0x110022, accent: 0x6644cc, bg: 0x050010, fog: 0x0a0018, wall: 0x220044 },
+  { name: 'Inferno', grid: 0x331100, accent: 0xff4400, bg: 0x0a0400, fog: 0x150800, wall: 0x442200 },
+  { name: 'Matrix', grid: 0x002200, accent: 0x33ff33, bg: 0x000800, fog: 0x001000, wall: 0x003300 },
 ];
 
 const SKINS = [
@@ -57,57 +60,121 @@ const SKINS = [
   { name: 'Plasma', wireframe: false, emissive: 0.8, roughness: 0.5, metalness: 0.5 },
   { name: 'Void', wireframe: true, emissive: 0.4, roughness: 0.8, metalness: 0.2 },
   { name: 'Solar', wireframe: false, emissive: 1.2, roughness: 0.2, metalness: 0.8 },
+  { name: 'Retro', wireframe: false, emissive: 0.3, roughness: 0.9, metalness: 0.1 },
+  { name: 'Chrome', wireframe: false, emissive: 0.5, roughness: 0.05, metalness: 1.0 },
+  { name: 'Nebula', wireframe: false, emissive: 0.9, roughness: 0.3, metalness: 0.6 },
+  { name: 'Obsidian', wireframe: false, emissive: 0.7, roughness: 0.15, metalness: 0.85 },
 ];
 
 const PLAYER_TITLES = ['Novice','Beginner','Apprentice','Student','Learner','Adept','Skilled','Expert','Master','Champion','Legend','Titan','Prodigy','Virtuoso','Grandmaster','Overlord','Demigod','Immortal','Transcendent','NEON GOD'];
 
 interface Achievement { id: string; name: string; desc: string; }
 const ACHIEVEMENTS: Achievement[] = [
+  // Line clears
   { id: 'first_clear', name: 'First Line', desc: 'Clear your first line' },
   { id: 'ten_lines', name: 'Ten Lines', desc: 'Clear 10 lines in a game' },
   { id: 'fifty_lines', name: 'Fifty Lines', desc: 'Clear 50 lines total' },
   { id: 'hundred_lines', name: 'Century', desc: 'Clear 100 lines total' },
   { id: 'five_hundred_lines', name: 'Line Lord', desc: 'Clear 500 lines total' },
+  { id: 'thousand_lines', name: 'Line Legend', desc: 'Clear 1,000 lines total' },
+  { id: 'twenty_five_hundred', name: 'Line God', desc: 'Clear 2,500 lines total' },
+  // Tetrises
   { id: 'first_tetris', name: 'First Tetris', desc: 'Clear 4 lines at once' },
   { id: 'ten_tetrises', name: 'Tetris Master', desc: '10 Tetrises total' },
+  { id: 'twenty_five_tetrises', name: 'Tetris Expert', desc: '25 Tetrises total' },
+  { id: 'fifty_tetrises', name: 'Tetris Lord', desc: '50 Tetrises total' },
+  { id: 'hundred_tetrises', name: 'Tetris God', desc: '100 Tetrises total' },
+  // T-Spins
   { id: 'first_tspin', name: 'T-Spin!', desc: 'Perform a T-Spin' },
   { id: 'ten_tspins', name: 'T-Spin Expert', desc: '10 T-Spins total' },
+  { id: 'twenty_five_tspins', name: 'T-Spin Master', desc: '25 T-Spins total' },
+  { id: 'fifty_tspins', name: 'T-Spin Lord', desc: '50 T-Spins total' },
+  // Combos
   { id: 'combo_5', name: 'Combo x5', desc: 'Reach a 5 combo' },
   { id: 'combo_10', name: 'Combo x10', desc: 'Reach a 10 combo' },
   { id: 'combo_15', name: 'Unstoppable', desc: 'Reach a 15 combo' },
-  { id: 'b2b_3', name: 'Back-to-Back x3', desc: '3 consecutive Tetrises/T-Spins' },
+  { id: 'combo_20', name: 'Combo Maniac', desc: 'Reach a 20 combo' },
+  { id: 'combo_25', name: 'Combo God', desc: 'Reach a 25 combo' },
+  // Back-to-back
+  { id: 'b2b_3', name: 'Back-to-Back x3', desc: '3 consecutive difficult clears' },
   { id: 'b2b_5', name: 'Back-to-Back x5', desc: '5 consecutive difficult clears' },
+  { id: 'b2b_7', name: 'Back-to-Back x7', desc: '7 consecutive difficult clears' },
+  { id: 'b2b_10', name: 'Relentless', desc: '10 consecutive difficult clears' },
+  // Score
   { id: 'score_1k', name: 'Scorer', desc: 'Score 1,000 points' },
   { id: 'score_10k', name: 'High Scorer', desc: 'Score 10,000 points' },
   { id: 'score_50k', name: 'Score Legend', desc: 'Score 50,000 points' },
   { id: 'score_100k', name: 'Score God', desc: 'Score 100,000 points' },
+  { id: 'score_250k', name: 'Quarter Million', desc: 'Score 250,000 points' },
+  { id: 'score_500k', name: 'Half Million', desc: 'Score 500,000 points' },
+  { id: 'score_1m', name: 'Millionaire', desc: 'Score 1,000,000 points' },
+  // Levels
   { id: 'level_5', name: 'Level 5', desc: 'Reach level 5' },
   { id: 'level_10', name: 'Level 10', desc: 'Reach level 10' },
   { id: 'level_15', name: 'Level 15', desc: 'Reach level 15' },
   { id: 'level_20', name: 'Level 20', desc: 'Reach level 20' },
+  { id: 'level_25', name: 'Level 25', desc: 'Reach level 25' },
+  { id: 'level_30', name: 'Level 30', desc: 'Reach level 30' },
+  // Sprint
   { id: 'sprint_clear', name: 'Sprinter', desc: 'Complete Sprint 40' },
   { id: 'sprint_under_2', name: 'Speed Demon', desc: 'Sprint 40 under 2 minutes' },
+  { id: 'sprint_under_90', name: 'Lightning Sprint', desc: 'Sprint 40 under 90 seconds' },
+  { id: 'sprint_under_60', name: 'Hyperspeed', desc: 'Sprint 40 under 60 seconds' },
+  // Games
   { id: 'games_10', name: 'Regular', desc: 'Play 10 games' },
   { id: 'games_50', name: 'Dedicated', desc: 'Play 50 games' },
   { id: 'games_100', name: 'Veteran', desc: 'Play 100 games' },
+  { id: 'games_500', name: 'Lifer', desc: 'Play 500 games' },
+  // Pieces
   { id: 'pieces_100', name: 'Builder', desc: 'Place 100 pieces total' },
   { id: 'pieces_1000', name: 'Architect', desc: 'Place 1,000 pieces total' },
   { id: 'pieces_5000', name: 'Grand Architect', desc: 'Place 5,000 pieces total' },
+  { id: 'pieces_10000', name: 'Infinite Builder', desc: 'Place 10,000 pieces total' },
+  // Special
   { id: 'perfect_clear', name: 'Perfect Clear', desc: 'Empty the entire board' },
+  { id: 'perfect_3', name: 'Perfect x3', desc: '3 perfect clears total' },
+  { id: 'perfect_10', name: 'Perfectionist', desc: '10 perfect clears total' },
+  { id: 'triple', name: 'Triple', desc: 'Clear 3 lines at once' },
+  { id: 'hard_drop_100', name: 'Slam', desc: 'Hard drop 100 times total' },
+  { id: 'hard_drop_500', name: 'Pile Driver', desc: 'Hard drop 500 times total' },
+  { id: 'hard_drop_1000', name: 'Meteor', desc: 'Hard drop 1,000 times total' },
+  // Mode-specific
   { id: 'daily_done', name: 'Daily Player', desc: 'Complete a Daily Challenge' },
   { id: 'daily_3', name: 'Daily Streak 3', desc: '3-day daily challenge streak' },
   { id: 'daily_7', name: 'Weekly Warrior', desc: '7-day daily challenge streak' },
+  { id: 'daily_30', name: 'Monthly Master', desc: '30-day daily challenge streak' },
   { id: 'skin_used', name: 'Fashion', desc: 'Use a non-default skin' },
   { id: 'all_modes', name: 'Explorer', desc: 'Play all 8 game modes' },
   { id: 'hard_mode', name: 'Hardcore', desc: 'Complete a game on Hard' },
   { id: 'zen_100', name: 'Zen Master', desc: 'Place 100 pieces in Zen mode' },
   { id: 'survival_5', name: 'Survivor', desc: 'Reach level 5 in Survival' },
+  { id: 'survival_10', name: 'Endurance', desc: 'Reach level 10 in Survival' },
+  { id: 'survival_15', name: 'Iron Will', desc: 'Reach level 15 in Survival' },
+  { id: 'survival_20', name: 'Invincible', desc: 'Reach level 20 in Survival' },
+  { id: 'blitz_5k', name: 'Blitz Bronze', desc: 'Score 5,000 in Blitz' },
+  { id: 'blitz_10k', name: 'Blitz Silver', desc: 'Score 10,000 in Blitz' },
+  { id: 'blitz_25k', name: 'Blitz Gold', desc: 'Score 25,000 in Blitz' },
+  { id: 'ultra_25k', name: 'Ultra Bronze', desc: 'Score 25,000 in Ultra' },
+  { id: 'ultra_50k', name: 'Ultra Silver', desc: 'Score 50,000 in Ultra' },
+  { id: 'ultra_100k', name: 'Ultra Gold', desc: 'Score 100,000 in Ultra' },
+  // Cascade
   { id: 'cascade_chain', name: 'Chain Reaction', desc: 'Get a 3+ cascade chain' },
+  { id: 'cascade_5', name: 'Chain Master', desc: 'Get a 5+ cascade chain' },
+  { id: 'cascade_7', name: 'Chain Lord', desc: 'Get a 7+ cascade chain' },
+  // Player level
   { id: 'plvl_5', name: 'Rising Star', desc: 'Reach player level 5' },
   { id: 'plvl_10', name: 'Experienced', desc: 'Reach player level 10' },
+  { id: 'plvl_15', name: 'Elite', desc: 'Reach player level 15' },
   { id: 'plvl_20', name: 'NEON GOD', desc: 'Reach player level 20' },
-  { id: 'triple', name: 'Triple', desc: 'Clear 3 lines at once' },
-  { id: 'hard_drop_100', name: 'Slam', desc: 'Hard drop 100 times total' },
+  // Theme/skin collectors
+  { id: 'all_themes', name: 'Decorator', desc: 'Try all 10 holodeck themes' },
+  { id: 'all_skins', name: 'Collector', desc: 'Try all 10 block skins' },
+  // Miscellaneous
+  { id: 'first_hold', name: 'Strategic', desc: 'Use Hold for the first time' },
+  { id: 'no_hold_win', name: 'Purist', desc: 'Complete Marathon L10+ without Hold' },
+  { id: 'speed_20', name: 'Terminal Velocity', desc: 'Play at drop speed < 0.1s' },
+  { id: 'garbage_clear', name: 'Garbage Collector', desc: 'Clear a garbage line in Survival' },
+  { id: 'garbage_10', name: 'Sanitation Expert', desc: 'Clear 10 garbage lines total' },
 ];
 
 // ─── SAVE DATA ─────────────────────────────────────────────────────
@@ -118,6 +185,9 @@ interface SaveData {
     games: number; totalScore: number; bestScore: number; totalLines: number; bestLevel: number;
     tetrises: number; tspins: number; bestCombo: number; playTimeMs: number; piecesPlaced: number;
     hardDrops: number; modesPlayed: string[]; dailyStreak: number; lastDailyDate: string;
+    singles: number; doubles: number; triples: number; perfectClears: number;
+    garbageCleared: number; bestCascade: number; themesUsed: number[]; skinsUsed: number[];
+    holdUsedCount: number;
   };
   settings: { masterVol: number; sfxVol: number; musicVol: number; themeIdx: number; skinIdx: number; difficulty: number };
   xp: number; playerLevel: number;
@@ -125,12 +195,25 @@ interface SaveData {
 function defaultSave(): SaveData {
   return {
     leaderboard: [], achievements: [], xp: 0, playerLevel: 1,
-    stats: { games: 0, totalScore: 0, bestScore: 0, totalLines: 0, bestLevel: 0, tetrises: 0, tspins: 0, bestCombo: 0, playTimeMs: 0, piecesPlaced: 0, hardDrops: 0, modesPlayed: [], dailyStreak: 0, lastDailyDate: '' },
+    stats: {
+      games: 0, totalScore: 0, bestScore: 0, totalLines: 0, bestLevel: 0, tetrises: 0, tspins: 0,
+      bestCombo: 0, playTimeMs: 0, piecesPlaced: 0, hardDrops: 0, modesPlayed: [], dailyStreak: 0, lastDailyDate: '',
+      singles: 0, doubles: 0, triples: 0, perfectClears: 0,
+      garbageCleared: 0, bestCascade: 0, themesUsed: [0], skinsUsed: [0],
+      holdUsedCount: 0,
+    },
     settings: { masterVol: 100, sfxVol: 100, musicVol: 100, themeIdx: 0, skinIdx: 0, difficulty: 1 },
   };
 }
 function loadSave(): SaveData {
-  try { const s = localStorage.getItem('neon-blocks-save'); if (s) { const d = JSON.parse(s); return { ...defaultSave(), ...d, stats: { ...defaultSave().stats, ...(d.stats || {}) }, settings: { ...defaultSave().settings, ...(d.settings || {}) } }; } } catch {}
+  try {
+    const s = localStorage.getItem('neon-blocks-save');
+    if (s) {
+      const d = JSON.parse(s);
+      const def = defaultSave();
+      return { ...def, ...d, stats: { ...def.stats, ...(d.stats || {}) }, settings: { ...def.settings, ...(d.settings || {}) } };
+    }
+  } catch {}
   return defaultSave();
 }
 function writeSave(d: SaveData) { try { localStorage.setItem('neon-blocks-save', JSON.stringify(d)); } catch {} }
@@ -141,8 +224,10 @@ class AudioManager {
   private masterGain!: GainNode;
   private sfxGain!: GainNode;
   private musicGain!: GainNode;
-  private musicOscs: OscillatorNode[] = [];
+  private musicNodes: (OscillatorNode | GainNode | BiquadFilterNode)[] = [];
   private musicPlaying = false;
+  private arpInterval: ReturnType<typeof setInterval> | null = null;
+  private currentArpLevel = 1;
 
   private ensure() {
     if (this.ctx) return;
@@ -181,11 +266,8 @@ class AudioManager {
 
   lineClear(count: number) {
     this.ensure();
-    const ctx = this.ctx!;
     const freqs = count >= 4 ? [440, 554, 659, 880] : count === 3 ? [440, 554, 659] : count === 2 ? [440, 554] : [440];
-    freqs.forEach((f, i) => {
-      setTimeout(() => this.playTone(f, 'sine', 0.25, 0.18), i * 60);
-    });
+    freqs.forEach((f, i) => { setTimeout(() => this.playTone(f, 'sine', 0.25, 0.18), i * 60); });
   }
 
   tSpin() {
@@ -194,50 +276,103 @@ class AudioManager {
   }
 
   combo(n: number) { this.playTone(330 + n * 55, 'triangle', 0.15, 0.12); }
-  gameOver() { [440, 370, 330, 262].forEach((f, i) => setTimeout(() => this.playTone(f, 'sawtooth', 0.3, 0.1), i * 120)); }
-  achievement() { [660, 770, 880, 990, 1100].forEach((f, i) => setTimeout(() => this.playTone(f, 'sine', 0.2, 0.1), i * 80)); }
+
+  gameOver() {
+    [440, 370, 330, 262].forEach((f, i) => setTimeout(() => this.playTone(f, 'sawtooth', 0.3, 0.1), i * 120));
+  }
+
+  achievement() {
+    [660, 770, 880, 990, 1100].forEach((f, i) => setTimeout(() => this.playTone(f, 'sine', 0.2, 0.1), i * 80));
+  }
+
+  levelUp() {
+    this.ensure();
+    [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => this.playTone(f, 'triangle', 0.2, 0.2), i * 80));
+  }
+
   countdown() { this.playTone(440, 'sine', 0.15, 0.12); }
   countdownGo() { this.playTone(880, 'sine', 0.25, 0.15); }
   click() { this.playTone(600, 'sine', 0.05, 0.08); }
+  cascade() { this.playTone(700, 'triangle', 0.2, 0.15); }
+  garbage() { this.playTone(120, 'sawtooth', 0.3, 0.1); }
+
+  updateLevel(level: number) { this.currentArpLevel = level; }
 
   startMusic() {
     if (this.musicPlaying) return;
     this.ensure();
     const ctx = this.ctx!;
     this.musicPlaying = true;
+
+    // Bass drone
     const bass = ctx.createOscillator();
     const bassG = ctx.createGain();
     bass.type = 'sine'; bass.frequency.value = 55;
-    bassG.gain.value = 0.08;
+    bassG.gain.value = 0.06;
     bass.connect(bassG); bassG.connect(this.musicGain);
     bass.start();
+
+    // Sub pad
     const pad = ctx.createOscillator();
     const padG = ctx.createGain();
     const padF = ctx.createBiquadFilter();
     pad.type = 'triangle'; pad.frequency.value = 82.5;
     padF.type = 'lowpass'; padF.frequency.value = 400;
-    padG.gain.value = 0.05;
+    padG.gain.value = 0.04;
     pad.connect(padF); padF.connect(padG); padG.connect(this.musicGain);
     pad.start();
+
+    // Shimmer with LFO
     const shimmer = ctx.createOscillator();
     const shimG = ctx.createGain();
     shimmer.type = 'sine'; shimmer.frequency.value = 110;
-    shimG.gain.value = 0.03;
+    shimG.gain.value = 0.025;
     shimmer.connect(shimG); shimG.connect(this.musicGain);
     shimmer.start();
     const lfo = ctx.createOscillator();
     const lfoG = ctx.createGain();
     lfo.type = 'sine'; lfo.frequency.value = 0.15;
-    lfoG.gain.value = 0.02;
+    lfoG.gain.value = 0.015;
     lfo.connect(lfoG); lfoG.connect(shimG.gain);
     lfo.start();
-    this.musicOscs = [bass, pad, shimmer, lfo];
+
+    this.musicNodes = [bass, bassG, pad, padG, padF, shimmer, shimG, lfo, lfoG];
+
+    // Procedural arpeggiator
+    const arpNotes = [
+      [110, 138.6, 164.8, 196, 220, 261.6, 329.6, 392],   // Am pentatonic
+      [130.8, 164.8, 196, 220, 261.6, 329.6, 392, 440],    // C major pentatonic
+      [146.8, 174.6, 220, 261.6, 293.7, 349.2, 440, 523.3], // D minor
+      [164.8, 196, 246.9, 293.7, 329.6, 392, 493.9, 587.3], // E phrygian
+    ];
+    let arpIdx = 0;
+    let scaleIdx = 0;
+
+    this.arpInterval = setInterval(() => {
+      if (!this.musicPlaying || !this.ctx) return;
+      const speed = Math.max(120, 300 - this.currentArpLevel * 12);
+      const scale = arpNotes[scaleIdx % arpNotes.length];
+      const note = scale[arpIdx % scale.length];
+
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = this.currentArpLevel > 10 ? 'sawtooth' : 'triangle';
+      o.frequency.value = note;
+      g.gain.setValueAtTime(0.04 + Math.min(this.currentArpLevel * 0.003, 0.04), ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+      o.connect(g); g.connect(this.musicGain);
+      o.start(); o.stop(ctx.currentTime + 0.25);
+
+      arpIdx++;
+      if (arpIdx % 16 === 0) scaleIdx++;
+    }, 200);
   }
 
   stopMusic() {
-    this.musicOscs.forEach(o => { try { o.stop(); } catch {} });
-    this.musicOscs = [];
+    this.musicNodes.forEach(n => { try { if (n instanceof OscillatorNode) n.stop(); } catch {} });
+    this.musicNodes = [];
     this.musicPlaying = false;
+    if (this.arpInterval) { clearInterval(this.arpInterval); this.arpInterval = null; }
   }
 }
 
@@ -288,12 +423,11 @@ async function main() {
   floor.rotation.x = -Math.PI / 2;
   floor.position.y = 0;
   world.scene.add(floor);
-  // Floor grid lines
   const floorLineGeo = new BufferGeometry();
   const floorVerts: number[] = [];
-  for (let i = -gridSize/2; i <= gridSize/2; i += 1) {
-    floorVerts.push(i, 0.001, -gridSize/2, i, 0.001, gridSize/2);
-    floorVerts.push(-gridSize/2, 0.001, i, gridSize/2, 0.001, i);
+  for (let i = -gridSize / 2; i <= gridSize / 2; i += 1) {
+    floorVerts.push(i, 0.001, -gridSize / 2, i, 0.001, gridSize / 2);
+    floorVerts.push(-gridSize / 2, 0.001, i, gridSize / 2, 0.001, i);
   }
   floorLineGeo.setAttribute('position', new Float32BufferAttribute(floorVerts, 3));
   const floorLines = new LineSegments(floorLineGeo, new LineBasicMaterial({ color: currentTheme.grid, transparent: true, opacity: 0.15 }));
@@ -347,13 +481,13 @@ async function main() {
     ceilMat.color.set(currentTheme.grid);
     decoGroup.children.forEach(c => { (c as Mesh).material = new MeshBasicMaterial({ color: currentTheme.accent, wireframe: true, transparent: true, opacity: 0.3 }); });
     particleGroup.children.forEach(c => { ((c as Mesh).material as MeshBasicMaterial).color.set(currentTheme.accent); });
-    // Update board border
     if (borderMesh) (borderMesh.material as LineBasicMaterial).color.set(currentTheme.accent);
+    // Update wall pillars
+    wallPillars.forEach(p => { ((p as Mesh).material as MeshBasicMaterial).color.set(currentTheme.wall); });
   }
 
   // ─── GAME BOARD (3D) ──────────────────────────────────────────
   const boardGroup = new Group();
-  // Position board so it's centered and slightly in front of player
   const boardW = COLS * CELL;
   const boardH = ROWS * CELL;
   boardGroup.position.set(-boardW / 2, 0.8, -1.5);
@@ -381,19 +515,41 @@ async function main() {
   // Grid lines on board
   const gridLineGeo = new BufferGeometry();
   const gVerts: number[] = [];
-  for (let c = 0; c <= COLS; c++) {
-    gVerts.push(c * CELL, 0, 0.001, c * CELL, boardH, 0.001);
-  }
-  for (let r = 0; r <= ROWS; r++) {
-    gVerts.push(0, r * CELL, 0.001, boardW, r * CELL, 0.001);
-  }
+  for (let c = 0; c <= COLS; c++) gVerts.push(c * CELL, 0, 0.001, c * CELL, boardH, 0.001);
+  for (let r = 0; r <= ROWS; r++) gVerts.push(0, r * CELL, 0.001, boardW, r * CELL, 0.001);
   gridLineGeo.setAttribute('position', new Float32BufferAttribute(gVerts, 3));
   const gridLines = new LineSegments(gridLineGeo, new LineBasicMaterial({ color: currentTheme.grid, transparent: true, opacity: 0.2 }));
   boardGroup.add(gridLines);
 
-  // Block meshes pool
-  const blockPool: Mesh[] = [];
-  const edgePool: LineSegments[] = [];
+  // 3D wall pillars (left and right)
+  const wallPillars: Mesh[] = [];
+  const pillarH = boardH + 0.04;
+  const pillarW = 0.025;
+  const pillarD = CELL * 0.6;
+  for (const xOff of [-pillarW / 2, boardW + pillarW / 2]) {
+    const pillar = new Mesh(
+      new BoxGeometry(pillarW, pillarH, pillarD),
+      new MeshBasicMaterial({ color: currentTheme.wall, transparent: true, opacity: 0.5 })
+    );
+    pillar.position.set(xOff, pillarH / 2, 0);
+    boardGroup.add(pillar);
+    wallPillars.push(pillar);
+  }
+  // Bottom bar
+  const bottomBar = new Mesh(
+    new BoxGeometry(boardW + pillarW * 2, pillarW, pillarD),
+    new MeshBasicMaterial({ color: currentTheme.wall, transparent: true, opacity: 0.5 })
+  );
+  bottomBar.position.set(boardW / 2, -pillarW / 2, 0);
+  boardGroup.add(bottomBar);
+  wallPillars.push(bottomBar);
+
+  // Screen shake state
+  const boardBasePos = boardGroup.position.clone();
+  let shakeTimer = 0;
+  let shakeIntensity = 0;
+
+  // Block meshes
   const activeBlocks: (Mesh | null)[][] = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
   const activeEdges: (LineSegments | null)[][] = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
 
@@ -484,12 +640,10 @@ async function main() {
     }
   }
 
-  // Next piece preview meshes (3D, world-space)
+  // Next/Hold preview groups
   const nextGroup = new Group();
   nextGroup.position.set(boardW / 2 + 0.25, boardH - 0.1, 0);
   boardGroup.add(nextGroup);
-
-  // Hold piece preview meshes
   const holdGroup = new Group();
   holdGroup.position.set(-0.25, boardH - 0.1, 0);
   boardGroup.add(holdGroup);
@@ -516,7 +670,7 @@ async function main() {
   // ─── PARTICLE EFFECTS ─────────────────────────────────────────
   interface Particle { mesh: Mesh; vel: Vector3; life: number; maxLife: number; }
   const particles: Particle[] = [];
-  const particlePoolMax = 150;
+  const particlePoolMax = 200;
 
   function spawnParticles(worldPos: Vector3, color: number, count: number) {
     for (let i = 0; i < count && particles.length < particlePoolMax; i++) {
@@ -548,21 +702,22 @@ async function main() {
   // ─── GAME STATE ───────────────────────────────────────────────
   let gameState: GameState = 'title';
   let gameMode: GameMode = 'marathon';
-  let difficulty = save.settings.difficulty; // 0=easy, 1=normal, 2=hard
+  let difficulty = save.settings.difficulty;
 
-  // Board grid (0 = empty, or piece color)
   const board: number[][] = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+  const boardIsGarbage: boolean[][] = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
 
-  // Current piece state
   let curType: PieceType = 'T';
   let curRotation = 0;
   let curCol = 3;
-  let curRow = 18; // row from bottom (0=bottom, ROWS-1=top)
+  let curRow = 18;
   let holdType: PieceType | null = null;
   let holdUsed = false;
+  let holdUsedThisGame = false;
   let nextQueue: PieceType[] = [];
   let gameScore = 0;
   let gameLevel = 1;
+  let prevGameLevel = 1;
   let gameLines = 0;
   let gameCombo = -1;
   let gameTspins = 0;
@@ -570,6 +725,7 @@ async function main() {
   let gameDoubles = 0;
   let gameTriples = 0;
   let gameTetrises = 0;
+  let gamePerfects = 0;
   let maxCombo = 0;
   let backToBack = 0;
   let gameTimeMs = 0;
@@ -586,12 +742,23 @@ async function main() {
   let countdownTimer = 0;
   let lastWasDifficult = false;
   let cascadeChainCount = 0;
+  let maxCascadeChain = 0;
   let rng = Math.random;
+  let garbageTimer = 0;
+  let garbageLinesCleared = 0;
 
   // Line clear animation
   let clearingLines: number[] = [];
   let clearAnimTimer = 0;
   const CLEAR_ANIM_DUR = 0.4;
+
+  // Cascade state
+  let isCascading = false;
+  let cascadeSettleTimer = 0;
+  const CASCADE_SETTLE_DUR = 0.3;
+
+  // Level-up display
+  let levelUpTimer = 0;
 
   const pieceTypes: PieceType[] = ['I', 'O', 'T', 'S', 'Z', 'J', 'L'];
 
@@ -644,7 +811,6 @@ async function main() {
     dropTimer = 0;
 
     if (!fits(shape, curCol, curRow)) {
-      // Game over
       endGame();
       return;
     }
@@ -652,14 +818,87 @@ async function main() {
     updateNextHoldVisuals();
   }
 
+  // ─── CASCADE MECHANICS ────────────────────────────────────────
+  function applyCascadeGravity(): boolean {
+    // In cascade mode, after clearing lines, blocks above gaps fall down
+    let moved = false;
+    for (let c = 0; c < COLS; c++) {
+      let writeRow = 0;
+      for (let r = 0; r < ROWS; r++) {
+        if (board[r][c] !== 0) {
+          if (r !== writeRow) {
+            board[writeRow][c] = board[r][c];
+            boardIsGarbage[writeRow][c] = boardIsGarbage[r][c];
+            board[r][c] = 0;
+            boardIsGarbage[r][c] = false;
+            moved = true;
+          }
+          writeRow++;
+        }
+      }
+      // Clear remaining rows
+      for (let r = writeRow; r < ROWS; r++) {
+        if (board[r][c] !== 0) {
+          board[r][c] = 0;
+          boardIsGarbage[r][c] = false;
+          moved = true;
+        }
+      }
+    }
+    if (moved) rebuildBoardVisuals();
+    return moved;
+  }
+
+  function checkCascadeClears(): number[] {
+    const linesToClear: number[] = [];
+    for (let r = 0; r < ROWS; r++) {
+      if (board[r].every(c => c !== 0)) linesToClear.push(r);
+    }
+    return linesToClear;
+  }
+
+  // ─── GARBAGE LINES ────────────────────────────────────────────
+  function addGarbageLine() {
+    // Check if top row has any blocks (would cause game over)
+    if (board[ROWS - 1].some(c => c !== 0)) {
+      endGame();
+      return;
+    }
+    // Push all rows up by 1
+    for (let r = ROWS - 1; r > 0; r--) {
+      for (let c = 0; c < COLS; c++) {
+        board[r][c] = board[r - 1][c];
+        boardIsGarbage[r][c] = boardIsGarbage[r - 1][c];
+      }
+    }
+    // Fill bottom row with garbage (one random gap)
+    const gap = Math.floor(rng() * COLS);
+    for (let c = 0; c < COLS; c++) {
+      board[0][c] = c === gap ? 0 : 0x555555;
+      boardIsGarbage[0][c] = c !== gap;
+    }
+    rebuildBoardVisuals();
+    audio.garbage();
+
+    // Move current piece up if needed
+    const shape = getShape();
+    if (!fits(shape, curCol, curRow)) {
+      curRow++;
+      if (!fits(shape, curCol, curRow)) {
+        endGame();
+        return;
+      }
+      updatePieceVisuals();
+    }
+  }
+
   function lockPiece() {
     const shape = getShape();
     const color = PIECE_COLORS[curType];
 
-    // Check T-Spin
+    // T-Spin detection
     let isTSpin = false;
     if (curType === 'T') {
-      // Check 3 of 4 corners occupied
       const corners = [[0, 0], [0, 2], [2, 0], [2, 2]];
       let filled = 0;
       for (const [dr, dc] of corners) {
@@ -694,13 +933,23 @@ async function main() {
     }
 
     if (linesToClear.length > 0) {
+      // Track garbage lines cleared
+      for (const row of linesToClear) {
+        if (boardIsGarbage[row].some(g => g)) {
+          garbageLinesCleared++;
+          save.stats.garbageCleared++;
+          checkAchievement('garbage_clear');
+          if (save.stats.garbageCleared >= 10) checkAchievement('garbage_10');
+        }
+      }
+
       clearingLines = linesToClear;
       clearAnimTimer = CLEAR_ANIM_DUR;
+      cascadeChainCount = 0;
 
       const isDifficult = linesToClear.length >= 4 || isTSpin;
       const b2bMult = (lastWasDifficult && isDifficult) ? 1.5 : 1;
 
-      // Score
       const baseScores: Record<number, number> = { 1: 100, 2: 300, 3: 500, 4: 800 };
       let pts = (baseScores[linesToClear.length] || 100) * gameLevel;
       if (isTSpin) {
@@ -711,11 +960,12 @@ async function main() {
         showLineClearText('T-SPIN!');
         checkAchievement('first_tspin');
         if (save.stats.tspins >= 10) checkAchievement('ten_tspins');
+        if (save.stats.tspins >= 25) checkAchievement('twenty_five_tspins');
+        if (save.stats.tspins >= 50) checkAchievement('fifty_tspins');
       }
       pts = Math.floor(pts * b2bMult);
       gameScore += pts;
 
-      // Combo
       gameCombo++;
       if (gameCombo > 0) {
         gameScore += 50 * gameCombo * gameLevel;
@@ -726,58 +976,75 @@ async function main() {
       gameLines += linesToClear.length;
       save.stats.totalLines += linesToClear.length;
 
-      // Stats
-      if (linesToClear.length === 1) gameSingles++;
-      else if (linesToClear.length === 2) gameDoubles++;
-      else if (linesToClear.length === 3) { gameTriples++; checkAchievement('triple'); }
+      if (linesToClear.length === 1) { gameSingles++; save.stats.singles++; }
+      else if (linesToClear.length === 2) { gameDoubles++; save.stats.doubles++; }
+      else if (linesToClear.length === 3) { gameTriples++; save.stats.triples++; checkAchievement('triple'); }
       else if (linesToClear.length >= 4) {
         gameTetrises++;
         save.stats.tetrises++;
         checkAchievement('first_tetris');
         if (save.stats.tetrises >= 10) checkAchievement('ten_tetrises');
+        if (save.stats.tetrises >= 25) checkAchievement('twenty_five_tetrises');
+        if (save.stats.tetrises >= 50) checkAchievement('fifty_tetrises');
+        if (save.stats.tetrises >= 100) checkAchievement('hundred_tetrises');
+        // Screen shake on Tetris
+        triggerShake(0.015, 0.3);
       }
 
-      // Back to back
       if (isDifficult) { backToBack++; } else { backToBack = 0; }
       lastWasDifficult = isDifficult;
       if (backToBack >= 3) checkAchievement('b2b_3');
       if (backToBack >= 5) checkAchievement('b2b_5');
+      if (backToBack >= 7) checkAchievement('b2b_7');
+      if (backToBack >= 10) checkAchievement('b2b_10');
 
       audio.lineClear(linesToClear.length);
-      showLineClearText(linesToClear.length >= 4 ? 'TETRIS!' : linesToClear.length === 3 ? 'TRIPLE!' : linesToClear.length === 2 ? 'DOUBLE!' : 'SINGLE');
+      if (!isTSpin) {
+        showLineClearText(linesToClear.length >= 4 ? 'TETRIS!' : linesToClear.length === 3 ? 'TRIPLE!' : linesToClear.length === 2 ? 'DOUBLE!' : 'SINGLE');
+      }
 
-      // Particle burst at cleared lines
+      // Particle burst
       for (const lr of linesToClear) {
         const wp = new Vector3();
         wp.set(boardGroup.position.x + boardW / 2, boardGroup.position.y + lr * CELL + CELL / 2, boardGroup.position.z);
-        spawnParticles(wp, currentTheme.accent, 8);
+        spawnParticles(wp, currentTheme.accent, 10);
       }
 
-      // Check achievements
+      // Achievements
       checkAchievement('first_clear');
       if (gameLines >= 10) checkAchievement('ten_lines');
       if (save.stats.totalLines >= 50) checkAchievement('fifty_lines');
       if (save.stats.totalLines >= 100) checkAchievement('hundred_lines');
       if (save.stats.totalLines >= 500) checkAchievement('five_hundred_lines');
+      if (save.stats.totalLines >= 1000) checkAchievement('thousand_lines');
+      if (save.stats.totalLines >= 2500) checkAchievement('twenty_five_hundred');
 
       if (gameCombo >= 5) checkAchievement('combo_5');
       if (gameCombo >= 10) checkAchievement('combo_10');
       if (gameCombo >= 15) checkAchievement('combo_15');
+      if (gameCombo >= 20) checkAchievement('combo_20');
+      if (gameCombo >= 25) checkAchievement('combo_25');
 
-      // Level up in marathon
+      // Level up
       if (gameMode === 'marathon' || gameMode === 'survival') {
         const newLevel = Math.floor(gameLines / 10) + 1 + (difficulty === 0 ? 0 : difficulty === 2 ? 2 : 0);
-        if (newLevel > gameLevel) gameLevel = newLevel;
+        if (newLevel > gameLevel) {
+          gameLevel = newLevel;
+          audio.updateLevel(gameLevel);
+        }
       }
-
-      // Don't spawn next piece until animation done
     } else {
       gameCombo = -1;
       // Perfect clear check
       if (board.every(row => row.every(c => c === 0))) {
         gameScore += 3000 * gameLevel;
+        gamePerfects++;
+        save.stats.perfectClears++;
         checkAchievement('perfect_clear');
+        if (save.stats.perfectClears >= 3) checkAchievement('perfect_3');
+        if (save.stats.perfectClears >= 10) checkAchievement('perfect_10');
         showLineClearText('PERFECT CLEAR!');
+        triggerShake(0.02, 0.4);
       }
       spawnPiece();
     }
@@ -787,29 +1054,98 @@ async function main() {
     if (gameScore >= 10000) checkAchievement('score_10k');
     if (gameScore >= 50000) checkAchievement('score_50k');
     if (gameScore >= 100000) checkAchievement('score_100k');
+    if (gameScore >= 250000) checkAchievement('score_250k');
+    if (gameScore >= 500000) checkAchievement('score_500k');
+    if (gameScore >= 1000000) checkAchievement('score_1m');
     if (gameLevel >= 5) { checkAchievement('level_5'); if (gameMode === 'survival') checkAchievement('survival_5'); }
-    if (gameLevel >= 10) checkAchievement('level_10');
-    if (gameLevel >= 15) checkAchievement('level_15');
-    if (gameLevel >= 20) checkAchievement('level_20');
+    if (gameLevel >= 10) { checkAchievement('level_10'); if (gameMode === 'survival') checkAchievement('survival_10'); }
+    if (gameLevel >= 15) { checkAchievement('level_15'); if (gameMode === 'survival') checkAchievement('survival_15'); }
+    if (gameLevel >= 20) { checkAchievement('level_20'); if (gameMode === 'survival') checkAchievement('survival_20'); }
+    if (gameLevel >= 25) checkAchievement('level_25');
+    if (gameLevel >= 30) checkAchievement('level_30');
+
+    // Speed achievement
+    if (getDropInterval() < 0.1) checkAchievement('speed_20');
+  }
+
+  // ─── SCREEN SHAKE ─────────────────────────────────────────────
+  function triggerShake(intensity: number, duration: number) {
+    shakeIntensity = intensity;
+    shakeTimer = duration;
+  }
+
+  function updateShake(dt: number) {
+    if (shakeTimer > 0) {
+      shakeTimer -= dt;
+      const progress = shakeTimer > 0 ? shakeTimer / 0.4 : 0;
+      const offset = shakeIntensity * progress;
+      boardGroup.position.set(
+        boardBasePos.x + (Math.random() - 0.5) * offset * 2,
+        boardBasePos.y + (Math.random() - 0.5) * offset * 2,
+        boardBasePos.z
+      );
+      if (shakeTimer <= 0) {
+        boardGroup.position.copy(boardBasePos);
+      }
+    }
   }
 
   function clearLines() {
-    // Actually remove lines from board
     const sorted = [...clearingLines].sort((a, b) => b - a);
     for (const row of sorted) {
-      // Remove visual blocks for this row
       for (let c = 0; c < COLS; c++) removeBlock(row, c);
-      // Shift board data down
       board.splice(row, 1);
       board.push(Array(COLS).fill(0));
+      boardIsGarbage.splice(row, 1);
+      boardIsGarbage.push(Array(COLS).fill(false));
     }
-    // Rebuild all visuals
     rebuildBoardVisuals();
     clearingLines = [];
 
     // Sprint: check win
     if (gameMode === 'sprint' && gameLines >= 40) { endGame(); return; }
 
+    // Cascade mode: apply gravity and check for chain clears
+    if (gameMode === 'cascade') {
+      const moved = applyCascadeGravity();
+      if (moved) {
+        const newClears = checkCascadeClears();
+        if (newClears.length > 0) {
+          cascadeChainCount++;
+          if (cascadeChainCount > maxCascadeChain) maxCascadeChain = cascadeChainCount;
+          if (cascadeChainCount > (save.stats.bestCascade || 0)) save.stats.bestCascade = cascadeChainCount;
+
+          // Cascade bonus scoring
+          const cascadeBonus = 200 * cascadeChainCount * gameLevel;
+          gameScore += cascadeBonus;
+          gameLines += newClears.length;
+          save.stats.totalLines += newClears.length;
+
+          audio.cascade();
+          showLineClearText(`CASCADE x${cascadeChainCount}!`);
+
+          if (cascadeChainCount >= 3) checkAchievement('cascade_chain');
+          if (cascadeChainCount >= 5) checkAchievement('cascade_5');
+          if (cascadeChainCount >= 7) checkAchievement('cascade_7');
+
+          // Trigger cascade animation
+          clearingLines = newClears;
+          clearAnimTimer = CLEAR_ANIM_DUR;
+          isCascading = true;
+
+          // Particles for cascade
+          for (const lr of newClears) {
+            const wp = new Vector3();
+            wp.set(boardGroup.position.x + boardW / 2, boardGroup.position.y + lr * CELL + CELL / 2, boardGroup.position.z);
+            spawnParticles(wp, 0xffaa00, 12);
+          }
+          return; // Don't spawn next piece yet
+        }
+      }
+    }
+
+    isCascading = false;
+    cascadeChainCount = 0;
     spawnPiece();
   }
 
@@ -836,6 +1172,8 @@ async function main() {
     gameHardDrops++;
     save.stats.hardDrops++;
     if (save.stats.hardDrops >= 100) checkAchievement('hard_drop_100');
+    if (save.stats.hardDrops >= 500) checkAchievement('hard_drop_500');
+    if (save.stats.hardDrops >= 1000) checkAchievement('hard_drop_1000');
     audio.drop();
     lockPiece();
   }
@@ -863,7 +1201,7 @@ async function main() {
 
   function rotatePiece(dir: number) {
     const numRots = PIECE_SHAPES[curType].length;
-    if (numRots <= 1) return; // O piece
+    if (numRots <= 1) return;
     const newRot = ((curRotation + dir) % numRots + numRots) % numRots;
     const newShape = PIECE_SHAPES[curType][newRot];
     const kicks = curType === 'I' ? KICK_I : KICK_JLSTZ;
@@ -888,6 +1226,9 @@ async function main() {
   function holdPiece() {
     if (holdUsed) return;
     holdUsed = true;
+    holdUsedThisGame = true;
+    save.stats.holdUsedCount++;
+    checkAchievement('first_hold');
     clearPieceMeshes();
     clearGhost();
     if (holdType === null) {
@@ -914,16 +1255,13 @@ async function main() {
     const shape = getShape();
     const color = PIECE_COLORS[curType];
     drawPiece(shape, curCol, curRow, color);
-    // Ghost
     const ghostRow = getGhostRow();
     if (ghostRow !== curRow) drawGhost(shape, curCol, ghostRow, color);
     else clearGhost();
   }
 
   function updateNextHoldVisuals() {
-    // Draw next 3 pieces using the 3D preview groups
     while (nextQueue.length < 4) nextQueue.push(...generateBag());
-    // Clear and redraw nextGroup with 3 pieces stacked
     while (nextGroup.children.length) nextGroup.remove(nextGroup.children[0]);
     for (let i = 0; i < 3; i++) {
       const previewG = new Group();
@@ -931,7 +1269,6 @@ async function main() {
       drawPreviewPiece(previewG, nextQueue[i]);
       nextGroup.add(previewG);
     }
-    // Hold
     while (holdGroup.children.length) holdGroup.remove(holdGroup.children[0]);
     if (holdType) drawPreviewPiece(holdGroup, holdType);
   }
@@ -965,23 +1302,24 @@ async function main() {
     return entity;
   }
 
-  // Create all panels
+  // Create all panels (17 total)
   createPanel('title', '/ui/main-menu.json', { width: 0.7, height: 0.9 });
   createPanel('modeSelect', '/ui/mode-select.json', { width: 0.6, height: 0.9 });
   createPanel('difficulty', '/ui/difficulty.json', { width: 0.5, height: 0.6 });
   createPanel('hud', '/ui/hud.json', { follower: true, width: 0.6, height: 0.08 });
   createPanel('nextHold', '/ui/next-hold.json', { screenSpace: true, ssWidth: '12vw', ssBottom: '120px', ssRight: '24px', width: 0.15, height: 0.3 });
-  createPanel('pause', '/ui/pause-menu.json', { width: 0.5, height: 0.4 });
+  createPanel('pause', '/ui/pause-menu.json', { width: 0.5, height: 0.5 });
   createPanel('gameOver', '/ui/game-over.json', { width: 0.6, height: 0.9 });
-  createPanel('leaderboard', '/ui/leaderboard.json', { width: 0.7, height: 0.8 });
+  createPanel('leaderboard', '/ui/leaderboard.json', { width: 0.7, height: 0.9 });
   createPanel('achievements', '/ui/achievements.json', { width: 0.7, height: 0.9 });
-  createPanel('stats', '/ui/stats.json', { width: 0.6, height: 0.8 });
+  createPanel('stats', '/ui/stats.json', { width: 0.6, height: 1.0 });
   createPanel('settings', '/ui/settings.json', { width: 0.6, height: 0.7 });
   createPanel('help', '/ui/help.json', { width: 0.6, height: 1.0 });
-  createPanel('skins', '/ui/skins.json', { width: 0.6, height: 0.6 });
+  createPanel('skins', '/ui/skins.json', { width: 0.6, height: 0.8 });
   createPanel('toast', '/ui/toast.json', { follower: true, width: 0.3, height: 0.06 });
   createPanel('countdown', '/ui/countdown.json', { follower: true, width: 0.15, height: 0.15 });
   createPanel('lineClear', '/ui/line-clear.json', { follower: true, width: 0.3, height: 0.08 });
+  createPanel('levelUp', '/ui/level-up.json', { follower: true, width: 0.3, height: 0.08 });
 
   function showPanel(id: string) {
     panelEntities.forEach((e, key) => { e.object3D.visible = key === id; });
@@ -1018,6 +1356,17 @@ async function main() {
     lineClearTimer = 1.5;
     const doc = entity.getValue(PanelDocument, 'document') as UIKitDocument | undefined;
     if (doc) { const el = doc.getElementById('line-clear-text'); if (el) el.text.value = text; }
+  }
+
+  // Level up display
+  function showLevelUp(level: number) {
+    const entity = panelEntities.get('levelUp')!;
+    entity.object3D.visible = true;
+    levelUpTimer = 2;
+    const doc = entity.getValue(PanelDocument, 'document') as UIKitDocument | undefined;
+    if (doc) { const el = doc.getElementById('lvl-text'); if (el) el.text.value = `LEVEL ${level}!`; }
+    audio.levelUp();
+    triggerShake(0.008, 0.2);
   }
 
   // ─── ACHIEVEMENT CHECK ────────────────────────────────────────
@@ -1057,11 +1406,16 @@ async function main() {
   }
 
   // ─── LEADERBOARD ──────────────────────────────────────────────
+  let lbFilterMode: string = 'ALL';
+  const lbModes = ['ALL', 'marathon', 'sprint', 'ultra', 'survival', 'zen', 'blitz', 'daily', 'cascade'];
+  let lbModeIdx = 0;
+
   function updateLeaderboardPanel() {
     const entity = panelEntities.get('leaderboard')!;
     const doc = entity.getValue(PanelDocument, 'document') as UIKitDocument | undefined;
     if (!doc) return;
-    const lb = save.leaderboard.slice(0, 10);
+    const filtered = lbFilterMode === 'ALL' ? save.leaderboard : save.leaderboard.filter(e => e.mode === lbFilterMode);
+    const lb = filtered.slice(0, 10);
     for (let i = 0; i < 10; i++) {
       const entry = lb[i];
       const s = doc.getElementById(`lb-s${i + 1}`);
@@ -1069,6 +1423,8 @@ async function main() {
       if (s) s.text.value = entry ? `${entry.score}` : '-';
       if (m) m.text.value = entry ? `${entry.mode} L${entry.level}` : '-';
     }
+    const modeLabel = doc.getElementById('lb-filter-mode');
+    if (modeLabel) modeLabel.text.value = lbFilterMode === 'ALL' ? 'ALL' : lbFilterMode.toUpperCase();
   }
 
   // ─── STATS PANEL ──────────────────────────────────────────────
@@ -1083,13 +1439,19 @@ async function main() {
     setText('st-best-score', `${s.bestScore}`);
     setText('st-total-lines', `${s.totalLines}`);
     setText('st-best-level', `${s.bestLevel}`);
+    setText('st-playtime', `${Math.floor(s.playTimeMs / 60000)}m`);
+    setText('st-player-level', `${save.playerLevel}`);
+    setText('st-singles', `${s.singles || 0}`);
+    setText('st-doubles', `${s.doubles || 0}`);
+    setText('st-triples', `${s.triples || 0}`);
     setText('st-tetrises', `${s.tetrises}`);
     setText('st-tspins', `${s.tspins}`);
+    setText('st-perfects', `${s.perfectClears || 0}`);
     setText('st-best-combo', `${s.bestCombo}`);
-    setText('st-playtime', `${Math.floor(s.playTimeMs / 60000)}m`);
     setText('st-pieces', `${s.piecesPlaced}`);
+    setText('st-hard-drops', `${s.hardDrops || 0}`);
+    setText('st-best-cascade', `${s.bestCascade || 0}`);
     setText('st-achievements', `${save.achievements.length}/${ACHIEVEMENTS.length}`);
-    setText('st-player-level', `${save.playerLevel}`);
   }
 
   // ─── SETTINGS PANEL ──────────────────────────────────────────
@@ -1146,18 +1508,21 @@ async function main() {
 
   // ─── GAME START/END ───────────────────────────────────────────
   function startGame() {
-    // Reset board
-    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) { board[r][c] = 0; removeBlock(r, c); }
+    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) { board[r][c] = 0; boardIsGarbage[r][c] = false; removeBlock(r, c); }
     clearPieceMeshes(); clearGhost();
     nextQueue = [];
-    holdType = null; holdUsed = false;
+    holdType = null; holdUsed = false; holdUsedThisGame = false;
     gameScore = 0; gameLines = 0; gameCombo = -1; gameTspins = 0;
-    gameSingles = 0; gameDoubles = 0; gameTriples = 0; gameTetrises = 0;
+    gameSingles = 0; gameDoubles = 0; gameTriples = 0; gameTetrises = 0; gamePerfects = 0;
     maxCombo = 0; backToBack = 0; lastWasDifficult = false;
     gameTimeMs = 0; gamePieces = 0; gameHardDrops = 0;
-    cascadeChainCount = 0;
+    cascadeChainCount = 0; maxCascadeChain = 0;
+    garbageTimer = 0; garbageLinesCleared = 0;
+    isCascading = false;
     gameLevel = difficulty === 0 ? 1 : difficulty === 2 ? 3 : 1;
+    prevGameLevel = gameLevel;
     lockTimer = 0; isLocking = false; lockResets = 0;
+    audio.updateLevel(gameLevel);
 
     if (gameMode === 'daily') {
       rng = mulberry32(dateSeed());
@@ -1167,7 +1532,6 @@ async function main() {
 
     boardGroup.visible = true;
 
-    // Countdown
     gameState = 'countdown';
     countdownVal = 3;
     countdownTimer = 1;
@@ -1191,7 +1555,6 @@ async function main() {
     audio.stopMusic();
     boardGroup.visible = false;
 
-    // Save stats
     save.stats.games++;
     save.stats.totalScore += gameScore;
     if (gameScore > save.stats.bestScore) save.stats.bestScore = gameScore;
@@ -1219,12 +1582,26 @@ async function main() {
     if (save.stats.games >= 10) checkAchievement('games_10');
     if (save.stats.games >= 50) checkAchievement('games_50');
     if (save.stats.games >= 100) checkAchievement('games_100');
+    if (save.stats.games >= 500) checkAchievement('games_500');
     if (save.stats.piecesPlaced >= 100) checkAchievement('pieces_100');
     if (save.stats.piecesPlaced >= 1000) checkAchievement('pieces_1000');
     if (save.stats.piecesPlaced >= 5000) checkAchievement('pieces_5000');
+    if (save.stats.piecesPlaced >= 10000) checkAchievement('pieces_10000');
     if (gameMode === 'sprint' && gameLines >= 40) {
       checkAchievement('sprint_clear');
       if (gameTimeMs < 120000) checkAchievement('sprint_under_2');
+      if (gameTimeMs < 90000) checkAchievement('sprint_under_90');
+      if (gameTimeMs < 60000) checkAchievement('sprint_under_60');
+    }
+    if (gameMode === 'blitz') {
+      if (gameScore >= 5000) checkAchievement('blitz_5k');
+      if (gameScore >= 10000) checkAchievement('blitz_10k');
+      if (gameScore >= 25000) checkAchievement('blitz_25k');
+    }
+    if (gameMode === 'ultra') {
+      if (gameScore >= 25000) checkAchievement('ultra_25k');
+      if (gameScore >= 50000) checkAchievement('ultra_50k');
+      if (gameScore >= 100000) checkAchievement('ultra_100k');
     }
     if (gameMode === 'daily') {
       checkAchievement('daily_done');
@@ -1237,17 +1614,25 @@ async function main() {
       save.stats.lastDailyDate = today;
       if (save.stats.dailyStreak >= 3) checkAchievement('daily_3');
       if (save.stats.dailyStreak >= 7) checkAchievement('daily_7');
+      if (save.stats.dailyStreak >= 30) checkAchievement('daily_30');
     }
     if (save.settings.skinIdx > 0) checkAchievement('skin_used');
     if (save.stats.modesPlayed.length >= 8) checkAchievement('all_modes');
     if (difficulty === 2) checkAchievement('hard_mode');
     if (save.playerLevel >= 5) checkAchievement('plvl_5');
     if (save.playerLevel >= 10) checkAchievement('plvl_10');
+    if (save.playerLevel >= 15) checkAchievement('plvl_15');
     if (save.playerLevel >= 20) checkAchievement('plvl_20');
+    // No-hold purist achievement
+    if (!holdUsedThisGame && gameMode === 'marathon' && gameLevel >= 10) checkAchievement('no_hold_win');
+    // Theme/skin collectors
+    if (!save.stats.themesUsed.includes(save.settings.themeIdx)) save.stats.themesUsed.push(save.settings.themeIdx);
+    if (!save.stats.skinsUsed.includes(save.settings.skinIdx)) save.stats.skinsUsed.push(save.settings.skinIdx);
+    if (save.stats.themesUsed.length >= 10) checkAchievement('all_themes');
+    if (save.stats.skinsUsed.length >= 10) checkAchievement('all_skins');
 
     writeSave(save);
 
-    // Show game over panel
     showPanel('gameOver');
     const goEntity = panelEntities.get('gameOver')!;
     setTimeout(() => {
@@ -1284,7 +1669,7 @@ async function main() {
 
   // Title buttons
   wireButton('title', 'btn-play', () => { gameState = 'modeSelect'; showPanel('modeSelect'); });
-  wireButton('title', 'btn-scores', () => { gameState = 'leaderboard'; updateLeaderboardPanel(); showPanel('leaderboard'); });
+  wireButton('title', 'btn-scores', () => { gameState = 'leaderboard'; lbModeIdx = 0; lbFilterMode = 'ALL'; updateLeaderboardPanel(); showPanel('leaderboard'); });
   wireButton('title', 'btn-achievements', () => { gameState = 'achievements'; achievePage = 0; updateAchievementsPanel(); showPanel('achievements'); });
   wireButton('title', 'btn-stats', () => { gameState = 'stats'; updateStatsPanel(); showPanel('stats'); });
   wireButton('title', 'btn-skins', () => { gameState = 'skins'; showPanel('skins'); });
@@ -1304,16 +1689,23 @@ async function main() {
   wireButton('difficulty', 'btn-hard', () => { difficulty = 2; save.settings.difficulty = 2; writeSave(save); startGame(); });
   wireButton('difficulty', 'btn-back', () => { gameState = 'modeSelect'; showPanel('modeSelect'); });
 
-  // Pause
+  // Pause (with restart)
   wireButton('pause', 'btn-resume', () => { gameState = 'playing'; showPanels('hud', 'nextHold'); audio.startMusic(); });
+  wireButton('pause', 'btn-restart', () => { audio.stopMusic(); startGame(); });
   wireButton('pause', 'btn-quit', () => { gameState = 'title'; boardGroup.visible = false; clearPieceMeshes(); clearGhost(); audio.stopMusic(); updateTitlePanel(); showPanel('title'); });
 
   // Game Over
   wireButton('gameOver', 'btn-rematch', () => startGame());
   wireButton('gameOver', 'btn-menu', () => { gameState = 'title'; updateTitlePanel(); showPanel('title'); });
 
-  // Leaderboard, achievements, stats, help, skins - back buttons
-  for (const panel of ['leaderboard', 'stats', 'help', 'skins']) {
+  // Leaderboard filters
+  wireButton('leaderboard', 'btn-back', () => { gameState = 'title'; updateTitlePanel(); showPanel('title'); });
+  wireButton('leaderboard', 'lb-filter-all', () => { lbModeIdx = 0; lbFilterMode = 'ALL'; updateLeaderboardPanel(); });
+  wireButton('leaderboard', 'lb-filter-prev', () => { lbModeIdx = (lbModeIdx - 1 + lbModes.length) % lbModes.length; lbFilterMode = lbModes[lbModeIdx]; updateLeaderboardPanel(); });
+  wireButton('leaderboard', 'lb-filter-next', () => { lbModeIdx = (lbModeIdx + 1) % lbModes.length; lbFilterMode = lbModes[lbModeIdx]; updateLeaderboardPanel(); });
+
+  // Back buttons
+  for (const panel of ['stats', 'help', 'skins']) {
     wireButton(panel, 'btn-back', () => { gameState = 'title'; updateTitlePanel(); showPanel('title'); });
   }
   wireButton('achievements', 'btn-back', () => { gameState = 'title'; updateTitlePanel(); showPanel('title'); });
@@ -1328,15 +1720,27 @@ async function main() {
   wireButton('settings', 'btn-sfx-down', () => { save.settings.sfxVol = Math.max(0, save.settings.sfxVol - 10); audio.setVolumes(save.settings.masterVol, save.settings.sfxVol, save.settings.musicVol); updateSettingsPanel(); writeSave(save); });
   wireButton('settings', 'btn-music-up', () => { save.settings.musicVol = Math.min(100, save.settings.musicVol + 10); audio.setVolumes(save.settings.masterVol, save.settings.sfxVol, save.settings.musicVol); updateSettingsPanel(); writeSave(save); });
   wireButton('settings', 'btn-music-down', () => { save.settings.musicVol = Math.max(0, save.settings.musicVol - 10); audio.setVolumes(save.settings.masterVol, save.settings.sfxVol, save.settings.musicVol); updateSettingsPanel(); writeSave(save); });
-  wireButton('settings', 'btn-theme-next', () => { save.settings.themeIdx = (save.settings.themeIdx + 1) % THEMES.length; applyTheme(save.settings.themeIdx); updateSettingsPanel(); writeSave(save); });
-  wireButton('settings', 'btn-theme-prev', () => { save.settings.themeIdx = (save.settings.themeIdx - 1 + THEMES.length) % THEMES.length; applyTheme(save.settings.themeIdx); updateSettingsPanel(); writeSave(save); });
+  wireButton('settings', 'btn-theme-next', () => {
+    save.settings.themeIdx = (save.settings.themeIdx + 1) % THEMES.length;
+    if (!save.stats.themesUsed.includes(save.settings.themeIdx)) save.stats.themesUsed.push(save.settings.themeIdx);
+    if (save.stats.themesUsed.length >= 10) checkAchievement('all_themes');
+    applyTheme(save.settings.themeIdx); updateSettingsPanel(); writeSave(save);
+  });
+  wireButton('settings', 'btn-theme-prev', () => {
+    save.settings.themeIdx = (save.settings.themeIdx - 1 + THEMES.length) % THEMES.length;
+    if (!save.stats.themesUsed.includes(save.settings.themeIdx)) save.stats.themesUsed.push(save.settings.themeIdx);
+    if (save.stats.themesUsed.length >= 10) checkAchievement('all_themes');
+    applyTheme(save.settings.themeIdx); updateSettingsPanel(); writeSave(save);
+  });
 
-  // Skins
+  // Skins (10 skins)
   for (let i = 0; i < SKINS.length; i++) {
     wireButton('skins', `skin-${i}`, () => {
       save.settings.skinIdx = i;
-      writeSave(save);
+      if (!save.stats.skinsUsed.includes(i)) save.stats.skinsUsed.push(i);
+      if (save.stats.skinsUsed.length >= 10) checkAchievement('all_skins');
       if (i > 0) checkAchievement('skin_used');
+      writeSave(save);
       showToast(`Skin: ${SKINS[i].name}`);
     });
   }
@@ -1353,7 +1757,6 @@ async function main() {
 
   function processInput(dt: number) {
     if (gameState !== 'playing') {
-      // Pause toggle
       if (gameState === 'paused' && keyDown.has('Escape')) {
         gameState = 'playing';
         showPanels('hud', 'nextHold');
@@ -1371,11 +1774,9 @@ async function main() {
       return;
     }
 
-    // Move
     if (keyDown.has('ArrowLeft')) { movePiece(-1); dasDir = -1; dasTimer = 0.17; }
     if (keyDown.has('ArrowRight')) { movePiece(1); dasDir = 1; dasTimer = 0.17; }
 
-    // DAS (delayed auto-shift)
     if (keys.has('ArrowLeft') && dasDir === -1) {
       dasTimer -= dt;
       if (dasTimer <= 0) { movePiece(-1); dasTimer = 0.03; }
@@ -1385,16 +1786,21 @@ async function main() {
       if (dasTimer <= 0) { movePiece(1); dasTimer = 0.03; }
     }
 
-    // Rotate
     if (keyDown.has('ArrowUp') || keyDown.has('KeyX')) rotatePiece(1);
     if (keyDown.has('KeyZ')) rotatePiece(-1);
 
-    // Drop
     if (keyDown.has('Space')) hardDrop();
     if (keys.has('ArrowDown')) softDrop();
 
-    // Hold
     if (keyDown.has('KeyC')) holdPiece();
+
+    // Quick restart with R
+    if (keyDown.has('KeyR')) {
+      audio.stopMusic();
+      startGame();
+      keyDown.clear();
+      return;
+    }
 
     keyDown.clear();
   }
@@ -1407,11 +1813,9 @@ async function main() {
     if (!right) return;
 
     if (gameState === 'playing') {
-      // Right thumbstick horizontal for move
-      const tx = right.getAxesValues?.(2)?.[0] ?? 0; // thumbstick X
-      const ty = right.getAxesValues?.(2)?.[1] ?? 0; // thumbstick Y
+      const tx = right.getAxesValues?.(2)?.[0] ?? 0;
+      const ty = right.getAxesValues?.(2)?.[1] ?? 0;
 
-      // Move with deadzone
       if (Math.abs(tx) > 0.5) {
         if (dasDir !== Math.sign(tx)) {
           movePiece(tx > 0 ? 1 : -1);
@@ -1423,21 +1827,18 @@ async function main() {
         }
       } else if (Math.abs(tx) < 0.3) { dasDir = 0; }
 
-      // Soft drop
       if (ty < -0.5) softDrop();
 
-      // Trigger = hard drop
       if (right.getButtonDown?.(0)) hardDrop();
-      // A = rotate CW
       if (right.getButtonDown?.(3)) rotatePiece(1);
-      // B = pause
       if (right.getButtonDown?.(4)) {
         gameState = 'paused';
         showPanel('pause');
         audio.stopMusic();
       }
-      // Left trigger = hold
       if (left?.getButtonDown?.(0)) holdPiece();
+      // Left A button = rotate CCW
+      if (left?.getButtonDown?.(3)) rotatePiece(-1);
     }
   }
 
@@ -1449,7 +1850,6 @@ async function main() {
     const dt = Math.min((now - prevTime) / 1000, 0.1);
     prevTime = now;
 
-    // Animate decorations
     const t = now / 1000;
     decoGroup.children.forEach(c => {
       c.rotation.y += (c.userData.rotSpeed || 0.3) * dt;
@@ -1464,11 +1864,18 @@ async function main() {
 
     updateParticles(dt);
     updateToast(dt);
+    updateShake(dt);
 
     // Line clear timer
     if (lineClearTimer > 0) {
       lineClearTimer -= dt;
       if (lineClearTimer <= 0) panelEntities.get('lineClear')!.object3D.visible = false;
+    }
+
+    // Level up timer
+    if (levelUpTimer > 0) {
+      levelUpTimer -= dt;
+      if (levelUpTimer <= 0) panelEntities.get('levelUp')!.object3D.visible = false;
     }
 
     // Border glow pulse
@@ -1503,15 +1910,32 @@ async function main() {
       if (gameMode === 'ultra' && gameTimeMs >= 180000) { endGame(); return; }
       if (gameMode === 'blitz' && gameTimeMs >= 60000) { endGame(); return; }
 
-      // Survival: level up over time
+      // Survival: level up over time + garbage lines
       if (gameMode === 'survival') {
-        gameLevel = Math.floor(gameTimeMs / 10000) + 1;
+        const newLevel = Math.floor(gameTimeMs / 10000) + 1;
+        if (newLevel > gameLevel) {
+          gameLevel = newLevel;
+          audio.updateLevel(gameLevel);
+        }
+
+        // Garbage lines every 30 seconds
+        garbageTimer += dt;
+        const garbageInterval = Math.max(15, 30 - gameLevel);
+        if (garbageTimer >= garbageInterval) {
+          garbageTimer = 0;
+          addGarbageLine();
+        }
+      }
+
+      // Level up detection
+      if (gameLevel > prevGameLevel) {
+        showLevelUp(gameLevel);
+        prevGameLevel = gameLevel;
       }
 
       // Line clear animation
       if (clearingLines.length > 0) {
         clearAnimTimer -= dt;
-        // Flash effect on clearing lines
         for (const row of clearingLines) {
           for (let c = 0; c < COLS; c++) {
             const block = activeBlocks[row]?.[c];
@@ -1523,7 +1947,7 @@ async function main() {
           }
         }
         if (clearAnimTimer <= 0) clearLines();
-        return; // Skip drop during animation
+        return;
       }
 
       // Gravity / drop
@@ -1550,7 +1974,6 @@ async function main() {
         }
       }
 
-      // Zen mode pieces tracking
       if (gameMode === 'zen' && gamePieces >= 100) checkAchievement('zen_100');
 
       updateHUD();
@@ -1558,7 +1981,6 @@ async function main() {
     }
   }
 
-  // Register update
   world.onUpdate(gameLoop);
 
   // ─── INITIAL STATE ────────────────────────────────────────────

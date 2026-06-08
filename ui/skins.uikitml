@@ -61,16 +61,24 @@
 <div class="panel">
   <span class="heading">BLOCK SKINS</span>
   <div class="row">
-    <div id="skin-0" class="skin-btn" cursor="pointer"><span id="skin-n0" class="skin-text">Neon</span></div>
-    <div id="skin-1" class="skin-btn" cursor="pointer"><span id="skin-n1" class="skin-text">Crystal</span></div>
+    <div id="skin-0" class="skin-btn" cursor="pointer"><span class="skin-text">Neon</span></div>
+    <div id="skin-1" class="skin-btn" cursor="pointer"><span class="skin-text">Crystal</span></div>
   </div>
   <div class="row">
-    <div id="skin-2" class="skin-btn" cursor="pointer"><span id="skin-n2" class="skin-text">Hologram</span></div>
-    <div id="skin-3" class="skin-btn" cursor="pointer"><span id="skin-n3" class="skin-text">Plasma</span></div>
+    <div id="skin-2" class="skin-btn" cursor="pointer"><span class="skin-text">Hologram</span></div>
+    <div id="skin-3" class="skin-btn" cursor="pointer"><span class="skin-text">Plasma</span></div>
   </div>
   <div class="row">
-    <div id="skin-4" class="skin-btn" cursor="pointer"><span id="skin-n4" class="skin-text">Void</span></div>
-    <div id="skin-5" class="skin-btn" cursor="pointer"><span id="skin-n5" class="skin-text">Solar</span></div>
+    <div id="skin-4" class="skin-btn" cursor="pointer"><span class="skin-text">Void</span></div>
+    <div id="skin-5" class="skin-btn" cursor="pointer"><span class="skin-text">Solar</span></div>
+  </div>
+  <div class="row">
+    <div id="skin-6" class="skin-btn" cursor="pointer"><span class="skin-text">Retro</span></div>
+    <div id="skin-7" class="skin-btn" cursor="pointer"><span class="skin-text">Chrome</span></div>
+  </div>
+  <div class="row">
+    <div id="skin-8" class="skin-btn" cursor="pointer"><span class="skin-text">Nebula</span></div>
+    <div id="skin-9" class="skin-btn" cursor="pointer"><span class="skin-text">Obsidian</span></div>
   </div>
   <div id="btn-back" class="btn-back" cursor="pointer">
     <span class="back-text">BACK</span>
