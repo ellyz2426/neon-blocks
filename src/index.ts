@@ -343,6 +343,23 @@ const ACHIEVEMENTS: Achievement[] = [
   { id: 'playtime_24h', name: 'One Full Day', desc: 'Play for 24 hours total' },
   { id: 'tspin_100', name: 'T-Spin Infinity', desc: '100 T-Spins total' },
   { id: 'lines_25000', name: 'Line Transcendent', desc: 'Clear 25,000 lines total' },
+
+  // Extreme milestones
+  { id: 'score_100m', name: 'Hundred Million', desc: 'Score 100,000,000 total' },
+  { id: 'tetris_200', name: 'Tetris Legend', desc: '200 Tetrises total' },
+  { id: 'perfect_50', name: 'Perfect Legend', desc: '50 perfect clears total' },
+  { id: 'zone_100', name: 'Zone Legend', desc: 'Activate Zone 100 times total' },
+  { id: 'cascade_10', name: 'Chain Legend', desc: 'Get a 10+ cascade chain' },
+  { id: 'dig_under_15', name: 'Dig Master', desc: 'Dig under 15 seconds' },
+  { id: 'sprint_under_30', name: 'Sprint Legend', desc: 'Sprint 40 under 30 seconds' },
+  { id: 'battle_15min', name: 'Battle Legend', desc: 'Survive 15 min in Battle' },
+  { id: 'ultra_200k', name: 'Ultra Diamond', desc: 'Score 200,000 in Ultra' },
+  { id: 'blitz_75k', name: 'Blitz Diamond', desc: 'Score 75,000 in Blitz' },
+  { id: 'piece_o_100', name: 'O-Piece Fan', desc: 'Place 100 O-pieces total' },
+  { id: 'piece_s_100', name: 'S-Piece Fan', desc: 'Place 100 S-pieces total' },
+  { id: 'piece_z_100', name: 'Z-Piece Fan', desc: 'Place 100 Z-pieces total' },
+  { id: 'piece_j_100', name: 'J-Piece Fan', desc: 'Place 100 J-pieces total' },
+  { id: 'piece_l_100', name: 'L-Piece Fan', desc: 'Place 100 L-pieces total' },
 ];
 
 // ─── SAVE DATA ─────────────────────────────────────────────────────
@@ -1183,12 +1200,32 @@ async function main() {
     clearGhost();
     audio.lock();
     gamePieces++;
+
+    // Landing particles
+    for (let r = 0; r < shape.length; r++) {
+      for (let c = 0; c < shape[r].length; c++) {
+        if (shape[r][c]) {
+          const br = curRow + r; const bc = curCol + c;
+          if (br >= 0 && br < ROWS && bc >= 0 && bc < COLS) {
+            const wp = new Vector3();
+            wp.set(boardGroup.position.x + bc * CELL + CELL / 2, boardGroup.position.y + br * CELL + CELL / 2, boardGroup.position.z);
+            spawnParticles(wp, color, 2);
+          }
+        }
+      }
+    }
+
     // Track piece type counts
     gamePieceCounts[curType] = (gamePieceCounts[curType] || 0) + 1;
     if (!save.stats.pieceCounts) save.stats.pieceCounts = { I: 0, O: 0, T: 0, S: 0, Z: 0, J: 0, L: 0 };
     save.stats.pieceCounts[curType] = (save.stats.pieceCounts[curType] || 0) + 1;
     if (save.stats.pieceCounts['I'] >= 100) checkAchievement('piece_i_100');
     if (save.stats.pieceCounts['T'] >= 100) checkAchievement('piece_t_100');
+    if (save.stats.pieceCounts['O'] >= 100) checkAchievement('piece_o_100');
+    if (save.stats.pieceCounts['S'] >= 100) checkAchievement('piece_s_100');
+    if (save.stats.pieceCounts['Z'] >= 100) checkAchievement('piece_z_100');
+    if (save.stats.pieceCounts['J'] >= 100) checkAchievement('piece_j_100');
+    if (save.stats.pieceCounts['L'] >= 100) checkAchievement('piece_l_100');
 
     // Check for line clears
     const linesToClear: number[] = [];
@@ -1506,6 +1543,7 @@ async function main() {
           if (cascadeChainCount >= 3) checkAchievement('cascade_chain');
           if (cascadeChainCount >= 5) checkAchievement('cascade_5');
           if (cascadeChainCount >= 7) checkAchievement('cascade_7');
+          if (cascadeChainCount >= 10) checkAchievement('cascade_10');
 
           // Trigger cascade animation
           clearingLines = newClears;
@@ -2080,6 +2118,9 @@ async function main() {
     setText('st-zone-best', `${save.stats.bestZoneLines || 0}`);
     setText('st-sprint-pb', save.stats.sprintBestMs > 0 ? fmtTime(save.stats.sprintBestMs) : '-');
     setText('st-dig-pb', save.stats.digBestMs > 0 ? fmtTime(save.stats.digBestMs) : '-');
+    setText('st-power-ups', `${fmtNum(s.powerUpsUsed || 0)}`);
+    setText('st-garbage-sent', `${fmtNum(s.garbageSent || 0)}`);
+    setText('st-battle-best', s.battleBestMs > 0 ? fmtTime(s.battleBestMs) : '-');
   }
 
   // ─── SETTINGS PANEL ──────────────────────────────────────────
@@ -2094,6 +2135,7 @@ async function main() {
     setText('theme-name', THEMES[save.settings.themeIdx]?.name || 'Neon');
     setText('ghost-val', save.settings.ghostVisible ? 'ON' : 'OFF');
     setText('das-val', DAS_LEVELS[save.settings.dasLevel]?.name || 'Normal');
+    setText('skin-name', SKINS[save.settings.skinIdx]?.name || 'Neon');
   }
 
   // ─── HUD UPDATE ──────────────────────────────────────────────
@@ -2261,6 +2303,7 @@ async function main() {
       if (gameTimeMs < 60000) checkAchievement('dig_under_60');
       if (gameTimeMs < 30000) checkAchievement('dig_under_30');
       if (gameTimeMs < 20000) checkAchievement('dig_under_20');
+      if (gameTimeMs < 15000) checkAchievement('dig_under_15');
       if (save.stats.digBestMs === 0 || gameTimeMs < save.stats.digBestMs) save.stats.digBestMs = gameTimeMs;
     }
 
@@ -2370,6 +2413,7 @@ async function main() {
     // Sprint PB achievements
     if (gameMode === 'sprint' && gameLines >= 40) {
       if (gameTimeMs < 45000) checkAchievement('sprint_under_45');
+      if (gameTimeMs < 30000) checkAchievement('sprint_under_30');
     }
 
     save.stats.totalActions = (save.stats.totalActions || 0) + gameActions;
@@ -2448,6 +2492,15 @@ async function main() {
     if (save.stats.tspins >= 100) checkAchievement('tspin_100');
     if (save.stats.totalLines >= 25000) checkAchievement('lines_25000');
 
+    // Extreme milestones
+    if (save.stats.totalScore >= 100000000) checkAchievement('score_100m');
+    if (save.stats.tetrises >= 200) checkAchievement('tetris_200');
+    if (save.stats.perfectClears >= 50) checkAchievement('perfect_50');
+    if (save.stats.zoneActivations >= 100) checkAchievement('zone_100');
+    if (gameMode === 'ultra' && gameScore >= 200000) checkAchievement('ultra_200k');
+    if (gameMode === 'blitz' && gameScore >= 75000) checkAchievement('blitz_75k');
+    if (gameMode === 'battle' && gameTimeMs >= 900000) checkAchievement('battle_15min');
+
     writeSave(save);
 
     showPanel('gameOver');
@@ -2469,7 +2522,7 @@ async function main() {
       setText('go-tspins', `${gameTspins}`);
       setText('go-xp', `+${fmtNum(xpEarned)}`);
       setText('go-pb', isNewBest ? '★ NEW BEST! ★' : '');
-      setText('go-dig-win', (gameMode === 'dig' && digWon) ? 'DIG COMPLETE!' : '');
+      setText('go-dig-win', (gameMode === 'dig' && digWon) ? 'DIG COMPLETE!' : (gameMode === 'countdown' && digWon) ? '⏬ COUNTDOWN COMPLETE!' : (gameMode === 'challenge' && digWon) ? '⚙ CHALLENGE COMPLETE!' : '');
       setText('go-garbage-sent', gameMode === 'battle' ? `${battleGarbageSent}` : '');
       // PPS / APM
       const pps = gameTimeMs > 0 ? (gamePieces / (gameTimeMs / 1000)).toFixed(2) : '0.00';

@@ -100,6 +100,10 @@
     <span id="das-val" class="value">Normal</span>
     <div id="btn-das-next" class="vol-btn" cursor="pointer"><span class="vol-text">+</span></div>
   </div>
+  <div class="row">
+    <span class="label">Skin</span>
+    <span id="skin-name" class="value">Neon</span>
+  </div>
   <div id="btn-back" class="btn-back" cursor="pointer">
     <span class="back-text">BACK</span>
   </div>

@@ -79,6 +79,10 @@
   <span class="section">RECORDS</span>
   <div class="row"><span class="label">Sprint PB</span><span id="st-sprint-pb" class="value">-</span></div>
   <div class="row"><span class="label">Dig PB</span><span id="st-dig-pb" class="value">-</span></div>
+  <div class="row"><span class="label">Battle Best</span><span id="st-battle-best" class="value">-</span></div>
+  <span class="section">COMBAT</span>
+  <div class="row"><span class="label">Power-Ups Used</span><span id="st-power-ups" class="value">0</span></div>
+  <div class="row"><span class="label">Garbage Sent</span><span id="st-garbage-sent" class="value">0</span></div>
   <div id="btn-back" class="btn-back" cursor="pointer">
     <span class="back-text">BACK</span>
   </div>

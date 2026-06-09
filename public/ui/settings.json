@@ -462,12 +462,45 @@
             "sourceTag": "span",
             "type": "custom",
             "children": [
+              "Skin"
+            ],
+            "properties": {
+              "class": "label"
+            },
+            "dataUid": "uid-43"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "Neon"
+            ],
+            "properties": {
+              "id": "skin-name",
+              "class": "value"
+            },
+            "dataUid": "uid-44"
+          }
+        ],
+        "properties": {
+          "class": "row"
+        },
+        "dataUid": "uid-42"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
               "BACK"
             ],
             "properties": {
               "class": "back-text"
             },
-            "dataUid": "uid-43"
+            "dataUid": "uid-46"
           }
         ],
         "properties": {
@@ -475,7 +508,7 @@
           "class": "btn-back",
           "cursor": "pointer"
         },
-        "dataUid": "uid-42"
+        "dataUid": "uid-45"
       }
     ],
     "properties": {
@@ -691,7 +724,7 @@
         "column": 0
       },
       "end": {
-        "line": 105,
+        "line": 109,
         "column": 6
       }
     },
@@ -1101,7 +1134,7 @@
         "column": 2
       },
       "end": {
-        "line": 104,
+        "line": 105,
         "column": 8
       }
     },
@@ -1112,6 +1145,36 @@
       },
       "end": {
         "line": 103,
+        "column": 35
+      }
+    },
+    "uid-44": {
+      "start": {
+        "line": 104,
+        "column": 4
+      },
+      "end": {
+        "line": 104,
+        "column": 50
+      }
+    },
+    "uid-45": {
+      "start": {
+        "line": 106,
+        "column": 2
+      },
+      "end": {
+        "line": 108,
+        "column": 8
+      }
+    },
+    "uid-46": {
+      "start": {
+        "line": 107,
+        "column": 4
+      },
+      "end": {
+        "line": 107,
         "column": 39
       }
     }
