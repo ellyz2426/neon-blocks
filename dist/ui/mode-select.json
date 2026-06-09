@@ -275,12 +275,35 @@
             "sourceTag": "span",
             "type": "custom",
             "children": [
+              "⚙ CHALLENGE"
+            ],
+            "properties": {
+              "class": "btn-text"
+            },
+            "dataUid": "uid-26"
+          }
+        ],
+        "properties": {
+          "id": "btn-challenge",
+          "class": "btn",
+          "cursor": "pointer"
+        },
+        "dataUid": "uid-25"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
               "BACK"
             ],
             "properties": {
               "class": "back-text"
             },
-            "dataUid": "uid-26"
+            "dataUid": "uid-28"
           }
         ],
         "properties": {
@@ -288,7 +311,7 @@
           "class": "btn btn-back",
           "cursor": "pointer"
         },
-        "dataUid": "uid-25"
+        "dataUid": "uid-27"
       }
     ],
     "properties": {
@@ -441,7 +464,7 @@
         "column": 0
       },
       "end": {
-        "line": 92,
+        "line": 95,
         "column": 6
       }
     },
@@ -692,6 +715,26 @@
       },
       "end": {
         "line": 90,
+        "column": 45
+      }
+    },
+    "uid-27": {
+      "start": {
+        "line": 92,
+        "column": 2
+      },
+      "end": {
+        "line": 94,
+        "column": 8
+      }
+    },
+    "uid-28": {
+      "start": {
+        "line": 93,
+        "column": 4
+      },
+      "end": {
+        "line": 93,
         "column": 39
       }
     }

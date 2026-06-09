@@ -147,6 +147,7 @@
   <div class="row"><span class="label">T-Spins</span><span id="go-tspins" class="value">0</span></div>
   <div class="perf-row"><span class="perf-label">PPS</span><span id="go-pps" class="perf-val">0.00</span></div>
   <div class="perf-row"><span class="perf-label">APM</span><span id="go-apm" class="perf-val">0</span></div>
+  <div class="perf-row"><span class="perf-label">Finesse</span><span id="go-finesse" class="perf-val">-</span></div>
   <div id="go-battle-section" class="battle-row"><span class="battle-label">Garbage Sent</span><span id="go-garbage-sent" class="battle-val"></span></div>
   <span id="go-sprint-pb" class="pb-time"></span>
   <span id="go-dig-pb" class="pb-time"></span>

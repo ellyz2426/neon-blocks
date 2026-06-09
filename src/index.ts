@@ -9,8 +9,8 @@ import {
 } from '@iwsdk/core';
 
 // ─── TYPES & CONSTANTS ───────────────────────────────────────────────
-type GameState = 'title' | 'modeSelect' | 'difficulty' | 'countdown' | 'playing' | 'paused' | 'gameOver' | 'leaderboard' | 'achievements' | 'stats' | 'settings' | 'help' | 'skins';
-type GameMode = 'marathon' | 'sprint' | 'ultra' | 'survival' | 'zen' | 'blitz' | 'daily' | 'cascade' | 'dig' | 'battle' | 'classic';
+type GameState = 'title' | 'modeSelect' | 'difficulty' | 'countdown' | 'playing' | 'paused' | 'gameOver' | 'leaderboard' | 'achievements' | 'stats' | 'settings' | 'help' | 'skins' | 'challengeConfig';
+type GameMode = 'marathon' | 'sprint' | 'ultra' | 'survival' | 'zen' | 'blitz' | 'daily' | 'cascade' | 'dig' | 'battle' | 'classic' | 'challenge';
 
 function fmtNum(n: number): string {
   return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -83,6 +83,8 @@ const THEMES = [
   { name: 'Matrix', grid: 0x002200, accent: 0x33ff33, bg: 0x000800, fog: 0x001000, wall: 0x003300 },
   { name: 'Sakura', grid: 0x331122, accent: 0xff88cc, bg: 0x0a0408, fog: 0x150812, wall: 0x442244 },
   { name: 'Void', grid: 0x0a0a15, accent: 0x4444aa, bg: 0x020208, fog: 0x050510, wall: 0x1a1a33 },
+  { name: 'Cyber', grid: 0x0a2233, accent: 0x00eeff, bg: 0x020810, fog: 0x051018, wall: 0x1a3344 },
+  { name: 'Horizon', grid: 0x331a0a, accent: 0xff6622, bg: 0x0a0502, fog: 0x150a05, wall: 0x44281a },
 ];
 
 const SKINS = [
@@ -98,6 +100,8 @@ const SKINS = [
   { name: 'Obsidian', wireframe: false, emissive: 0.7, roughness: 0.15, metalness: 0.85 },
   { name: 'Prism', wireframe: false, emissive: 1.3, roughness: 0.1, metalness: 0.95 },
   { name: 'Glitch', wireframe: true, emissive: 1.1, roughness: 0.4, metalness: 0.6 },
+  { name: 'Pulse', wireframe: false, emissive: 1.4, roughness: 0.2, metalness: 0.75 },
+  { name: 'Frost', wireframe: false, emissive: 0.55, roughness: 0.08, metalness: 0.92 },
 ];
 
 const PLAYER_TITLES = ['Novice','Beginner','Apprentice','Student','Learner','Adept','Skilled','Expert','Master','Champion','Legend','Titan','Prodigy','Virtuoso','Grandmaster','Overlord','Demigod','Immortal','Transcendent','NEON GOD'];
@@ -294,6 +298,34 @@ const ACHIEVEMENTS: Achievement[] = [
   { id: 'first_zone_5', name: 'Zone Novice', desc: 'Clear 5+ lines in first Zone' },
   { id: 'tspin_triple', name: 'T-Spin Triple', desc: 'T-Spin + clear 3 lines' },
   { id: 'zone_8_plus', name: 'Zone Expert', desc: 'Clear 8+ lines in Zone 3 times' },
+
+  // Finesse
+  { id: 'finesse_10', name: 'Efficient', desc: '10+ games with finesse ratio > 80%' },
+  { id: 'finesse_90', name: 'Precise', desc: 'Finish a game with finesse ratio > 90%' },
+  { id: 'finesse_perfect', name: 'Flawless', desc: 'Finish a game with 100% finesse' },
+
+  // Challenge mode
+  { id: 'challenge_clear', name: 'Challenger', desc: 'Complete a Challenge' },
+  { id: 'challenge_5', name: 'Challenge Veteran', desc: 'Complete 5 Challenges' },
+  { id: 'challenge_10', name: 'Challenge Master', desc: 'Complete 10 Challenges' },
+
+  // Advanced milestones
+  { id: 'marathon_300', name: 'Marathon Epic', desc: 'Clear 300 lines in Marathon' },
+  { id: 'survival_25', name: 'Unkillable', desc: 'Reach level 25 in Survival' },
+  { id: 'ultra_150k', name: 'Ultra Platinum', desc: 'Score 150,000 in Ultra' },
+  { id: 'blitz_50k', name: 'Blitz Platinum', desc: 'Score 50,000 in Blitz' },
+  { id: 'score_25m', name: 'Twenty-Five Million', desc: 'Score 25,000,000 total' },
+  { id: 'pieces_25000', name: 'Legendary Builder', desc: 'Place 25,000 pieces total' },
+  { id: 'lines_5000', name: 'Line Veteran', desc: 'Clear 5,000 lines total' },
+  { id: 'all_14_themes', name: 'World Traveler', desc: 'Try all 14 holodeck themes' },
+  { id: 'all_14_skins', name: 'Style Icon', desc: 'Try all 14 block skins' },
+  { id: 'all_12_modes', name: 'Completionist', desc: 'Play all 12 game modes' },
+  { id: 'tspin_double', name: 'T-Spin Double!', desc: 'Perform a T-Spin Double' },
+  { id: 'tspin_50', name: 'T-Spin Legend', desc: '50 T-Spins in a single game' },
+  { id: 'combo_40', name: 'Combo Transcendent', desc: 'Reach a 40 combo' },
+
+  // Lock delay mastery
+  { id: 'lock_reset_10', name: 'Lock Juggler', desc: '10+ lock resets in one piece' },
 ];
 
 // ─── SAVE DATA ─────────────────────────────────────────────────────
@@ -899,6 +931,23 @@ async function main() {
   let digLinesLeft = 0;
   let digWon = false;
 
+  // Challenge mode config
+  interface ChallengeConfig {
+    startLevel: number;
+    targetLines: number;
+    timeLimitSec: number; // 0 = no limit
+    garbageInterval: number; // 0 = none
+    powerUps: boolean;
+    zoneEnabled: boolean;
+  }
+  let challengeConfig: ChallengeConfig = { startLevel: 1, targetLines: 100, timeLimitSec: 0, garbageInterval: 0, powerUps: true, zoneEnabled: true };
+  let challengesClear = 0;
+
+  // Finesse tracking
+  let gameOptimalMoves = 0;
+  let gameActualMoves = 0;
+  let gamesWithGoodFinesse = 0;
+
   // Visual: hard drop trail
   interface DropTrail { mesh: Mesh; life: number; }
   const dropTrails: DropTrail[] = [];
@@ -1193,6 +1242,7 @@ async function main() {
         if (save.stats.tspins >= 25) checkAchievement('twenty_five_tspins');
         if (save.stats.tspins >= 50) checkAchievement('fifty_tspins');
         if (linesToClear.length >= 3) checkAchievement('tspin_triple');
+        if (linesToClear.length >= 2) checkAchievement('tspin_double');
       }
       pts = Math.floor(pts * b2bMult);
       gameScore += pts;
@@ -1284,7 +1334,7 @@ async function main() {
       if (gameCombo >= 30) checkAchievement('combo_30');
 
       // Level up
-      if (gameMode === 'marathon' || gameMode === 'survival' || gameMode === 'classic') {
+      if (gameMode === 'marathon' || gameMode === 'survival' || gameMode === 'classic' || gameMode === 'challenge') {
         const newLevel = Math.floor(gameLines / 10) + 1 + (difficulty === 0 ? 0 : difficulty === 2 ? 2 : 0);
         if (newLevel > gameLevel) {
           gameLevel = newLevel;
@@ -1670,6 +1720,7 @@ async function main() {
       if (isLocking && lockResets < 15) { lockTimer = 0; lockResets++; }
       audio.move();
       gameActions++;
+      gameActualMoves++;
       updatePieceVisuals();
     }
   }
@@ -1687,6 +1738,7 @@ async function main() {
         if (isLocking && lockResets < 15) { lockTimer = 0; lockResets++; }
         audio.rotate();
         gameActions++;
+        gameActualMoves++;
         updatePieceVisuals();
       }
       return;
@@ -1706,6 +1758,7 @@ async function main() {
         if (isLocking && lockResets < 15) { lockTimer = 0; lockResets++; }
         audio.rotate();
         gameActions++;
+        gameActualMoves++;
         updatePieceVisuals();
         return;
       }
@@ -1815,6 +1868,7 @@ async function main() {
   createPanel('zoneActive', '/ui/zone-active.json', { follower: true, width: 0.35, height: 0.12 });
   createPanel('pieceStats', '/ui/piece-stats.json', { screenSpace: true, ssWidth: '8vw', ssBottom: '200px', ssLeft: '24px', width: 0.1, height: 0.25 });
   createPanel('scorePopup', '/ui/score-popup.json', { follower: true, width: 0.25, height: 0.06 });
+  createPanel('challengeConfig', '/ui/challenge-config.json', { width: 0.55, height: 0.7 });
 
   function showPanel(id: string) {
     panelEntities.forEach((e, key) => { e.object3D.visible = key === id; });
@@ -1913,7 +1967,7 @@ async function main() {
 
   // ─── LEADERBOARD ──────────────────────────────────────────────
   let lbFilterMode: string = 'ALL';
-  const lbModes = ['ALL', 'marathon', 'sprint', 'ultra', 'survival', 'zen', 'blitz', 'daily', 'cascade', 'dig', 'battle', 'classic'];
+  const lbModes = ['ALL', 'marathon', 'sprint', 'ultra', 'survival', 'zen', 'blitz', 'daily', 'cascade', 'dig', 'battle', 'classic', 'challenge'];
   let lbModeIdx = 0;
 
   function updateLeaderboardPanel() {
@@ -2048,6 +2102,8 @@ async function main() {
     zonePendingRows = [];
     gamePieceCounts = { I: 0, O: 0, T: 0, S: 0, Z: 0, J: 0, L: 0 };
     gameActions = 0;
+    gameOptimalMoves = 0;
+    gameActualMoves = 0;
     gameLevel = difficulty === 0 ? 1 : difficulty === 2 ? 3 : 1;
     prevGameLevel = gameLevel;
     lockTimer = 0; isLocking = false; lockResets = 0;
@@ -2060,6 +2116,13 @@ async function main() {
     }
 
     boardGroup.visible = true;
+
+    // Challenge mode: apply config overrides
+    if (gameMode === 'challenge') {
+      gameLevel = challengeConfig.startLevel;
+      prevGameLevel = gameLevel;
+      audio.updateLevel(gameLevel);
+    }
 
     // Dig mode: place preset garbage
     if (gameMode === 'dig') {
@@ -2239,6 +2302,44 @@ async function main() {
     if (save.stats.skinsUsed.length >= 10) checkAchievement('all_skins');
     if (save.stats.themesUsed.length >= 12) checkAchievement('all_12_themes');
     if (save.stats.skinsUsed.length >= 12) checkAchievement('all_12_skins');
+    if (save.stats.themesUsed.length >= 14) checkAchievement('all_14_themes');
+    if (save.stats.skinsUsed.length >= 14) checkAchievement('all_14_skins');
+    if (save.stats.modesPlayed.length >= 12) checkAchievement('all_12_modes');
+
+    // Challenge mode achievements
+    if (gameMode === 'challenge') {
+      challengesClear++;
+      checkAchievement('challenge_clear');
+      if (challengesClear >= 5) checkAchievement('challenge_5');
+      if (challengesClear >= 10) checkAchievement('challenge_10');
+    }
+
+    // Advanced milestone achievements
+    if (gameMode === 'marathon' && gameLines >= 300) checkAchievement('marathon_300');
+    if (gameMode === 'survival' && gameLevel >= 25) checkAchievement('survival_25');
+    if (gameMode === 'ultra' && gameScore >= 150000) checkAchievement('ultra_150k');
+    if (gameMode === 'blitz' && gameScore >= 50000) checkAchievement('blitz_50k');
+    if (save.stats.totalScore >= 25000000) checkAchievement('score_25m');
+    if (save.stats.piecesPlaced >= 25000) checkAchievement('pieces_25000');
+    if (save.stats.totalLines >= 5000) checkAchievement('lines_5000');
+    if (gameCombo >= 40) checkAchievement('combo_40');
+    if (gameTspins >= 50) checkAchievement('tspin_50');
+
+    // Finesse tracking
+    if (gamePieces >= 20 && gameActualMoves > 0) {
+      // Estimate optimal: 2 moves avg (one rotate, one shift), actual = gameActualMoves
+      gameOptimalMoves = gamePieces * 2;
+      const finesseRatio = Math.min(1, gameOptimalMoves / gameActualMoves);
+      if (finesseRatio >= 0.9) checkAchievement('finesse_90');
+      if (finesseRatio >= 0.99) checkAchievement('finesse_perfect');
+      if (finesseRatio >= 0.8) {
+        gamesWithGoodFinesse++;
+        if (gamesWithGoodFinesse >= 10) checkAchievement('finesse_10');
+      }
+    }
+
+    // Lock reset achievement
+    if (lockResets >= 10) checkAchievement('lock_reset_10');
 
     writeSave(save);
 
@@ -2268,6 +2369,14 @@ async function main() {
       const apm = gameTimeMs > 0 ? Math.round(gameActions / (gameTimeMs / 60000)) : 0;
       setText('go-pps', `${pps}`);
       setText('go-apm', `${apm}`);
+      // Finesse ratio display
+      if (gamePieces >= 20 && gameActualMoves > 0) {
+        const optMoves = gamePieces * 2;
+        const fRatio = Math.min(100, Math.round((optMoves / gameActualMoves) * 100));
+        setText('go-finesse', `${fRatio}%`);
+      } else {
+        setText('go-finesse', '-');
+      }
       // Sprint/Dig PB
       if (gameMode === 'sprint' && gameLines >= 40) {
         setText('go-sprint-pb', save.stats.sprintBestMs > 0 ? `PB: ${fmtTime(save.stats.sprintBestMs)}` : '');
@@ -2305,6 +2414,7 @@ async function main() {
   for (const [btnId, mode] of modes) {
     wireButton('modeSelect', btnId, () => { gameMode = mode; gameState = 'difficulty'; showPanel('difficulty'); });
   }
+  wireButton('modeSelect', 'btn-challenge', () => { gameMode = 'challenge'; gameState = 'challengeConfig'; updateChallengeConfigPanel(); showPanel('challengeConfig'); });
   wireButton('modeSelect', 'btn-back', () => { gameState = 'title'; updateTitlePanel(); showPanel('title'); });
 
   // Difficulty
@@ -2390,6 +2500,48 @@ async function main() {
       showToast(`Skin: ${SKINS[i].name}`);
     });
   }
+
+  // ─── CHALLENGE CONFIG ─────────────────────────────────────────
+  const CH_LEVEL_OPTS = [1, 2, 3, 5, 8, 10, 15, 20];
+  const CH_LINES_OPTS = [0, 20, 40, 60, 80, 100, 150, 200, 300];
+  const CH_TIME_OPTS = [0, 30, 60, 90, 120, 180, 300]; // seconds
+  const CH_GARB_OPTS = [0, 30, 20, 15, 10, 5]; // seconds between garbage (0=none)
+  let chLvlIdx = 0, chLinesIdx = 4, chTimeIdx = 0, chGarbIdx = 0;
+
+  function fmtChTime(sec: number): string { return sec === 0 ? 'None' : sec < 60 ? `${sec}s` : `${sec / 60}m`; }
+  function fmtChGarb(sec: number): string { return sec === 0 ? 'None' : `${sec}s`; }
+
+  function updateChallengeConfigPanel() {
+    const doc = panelEntities.get('challengeConfig')?.getValue(PanelDocument, 'document') as UIKitDocument | undefined;
+    if (!doc) return;
+    const setText = (id: string, val: string) => { const el = doc.getElementById(id); if (el) el.text.value = val; };
+    setText('ch-level', `${CH_LEVEL_OPTS[chLvlIdx]}`);
+    setText('ch-lines', CH_LINES_OPTS[chLinesIdx] === 0 ? '∞' : `${CH_LINES_OPTS[chLinesIdx]}`);
+    setText('ch-time', fmtChTime(CH_TIME_OPTS[chTimeIdx]));
+    setText('ch-garbage', fmtChGarb(CH_GARB_OPTS[chGarbIdx]));
+  }
+
+  wireButton('challengeConfig', 'btn-ch-lvl-up', () => { chLvlIdx = Math.min(CH_LEVEL_OPTS.length - 1, chLvlIdx + 1); updateChallengeConfigPanel(); });
+  wireButton('challengeConfig', 'btn-ch-lvl-down', () => { chLvlIdx = Math.max(0, chLvlIdx - 1); updateChallengeConfigPanel(); });
+  wireButton('challengeConfig', 'btn-ch-lines-up', () => { chLinesIdx = Math.min(CH_LINES_OPTS.length - 1, chLinesIdx + 1); updateChallengeConfigPanel(); });
+  wireButton('challengeConfig', 'btn-ch-lines-down', () => { chLinesIdx = Math.max(0, chLinesIdx - 1); updateChallengeConfigPanel(); });
+  wireButton('challengeConfig', 'btn-ch-time-up', () => { chTimeIdx = Math.min(CH_TIME_OPTS.length - 1, chTimeIdx + 1); updateChallengeConfigPanel(); });
+  wireButton('challengeConfig', 'btn-ch-time-down', () => { chTimeIdx = Math.max(0, chTimeIdx - 1); updateChallengeConfigPanel(); });
+  wireButton('challengeConfig', 'btn-ch-garb-up', () => { chGarbIdx = Math.min(CH_GARB_OPTS.length - 1, chGarbIdx + 1); updateChallengeConfigPanel(); });
+  wireButton('challengeConfig', 'btn-ch-garb-down', () => { chGarbIdx = Math.max(0, chGarbIdx - 1); updateChallengeConfigPanel(); });
+  wireButton('challengeConfig', 'btn-ch-start', () => {
+    challengeConfig = {
+      startLevel: CH_LEVEL_OPTS[chLvlIdx],
+      targetLines: CH_LINES_OPTS[chLinesIdx],
+      timeLimitSec: CH_TIME_OPTS[chTimeIdx],
+      garbageInterval: CH_GARB_OPTS[chGarbIdx],
+      powerUps: true,
+      zoneEnabled: true,
+    };
+    difficulty = 1;
+    startGame();
+  });
+  wireButton('challengeConfig', 'btn-ch-back', () => { gameState = 'modeSelect'; showPanel('modeSelect'); });
 
   // ─── INPUT ────────────────────────────────────────────────────
   const keys: Set<string> = new Set();
@@ -2631,6 +2783,8 @@ async function main() {
       // Time-limited modes
       if (gameMode === 'ultra' && gameTimeMs >= 180000) { endGame(); return; }
       if (gameMode === 'blitz' && gameTimeMs >= 60000) { endGame(); return; }
+      if (gameMode === 'challenge' && challengeConfig.timeLimitSec > 0 && gameTimeMs >= challengeConfig.timeLimitSec * 1000) { endGame(); return; }
+      if (gameMode === 'challenge' && challengeConfig.targetLines > 0 && gameLines >= challengeConfig.targetLines) { digWon = true; endGame(); return; }
 
       // Battle mode: AI sends garbage
       if (gameMode === 'battle') {
@@ -2664,6 +2818,15 @@ async function main() {
         garbageTimer += dt;
         const garbageInterval = Math.max(15, 30 - gameLevel);
         if (garbageTimer >= garbageInterval) {
+          garbageTimer = 0;
+          addGarbageLine();
+        }
+      }
+
+      // Challenge mode: periodic garbage
+      if (gameMode === 'challenge' && challengeConfig.garbageInterval > 0) {
+        garbageTimer += dt;
+        if (garbageTimer >= challengeConfig.garbageInterval) {
           garbageTimer = 0;
           addGarbageLine();
         }

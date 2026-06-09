@@ -1,6 +1,6 @@
 # Neon Blocks VR
 
-A feature-rich falling block puzzle game built with IWSDK 0.4.1 for WebXR and browser play.
+A feature-rich falling block puzzle game built with IWSDK 0.4.1 for WebXR and browser play. Inspired by Tetris with Zone mechanics from Tetris Effect.
 
 **[▶ Play Now](https://ellyz2426.github.io/neon-blocks/)**
 
@@ -11,49 +11,77 @@ A feature-rich falling block puzzle game built with IWSDK 0.4.1 for WebXR and br
 - 10×20 3D board with ghost piece preview and lock delay
 - Hold piece system with swap mechanics
 - 3-deep next piece preview queue (3D world-space previews)
-- DAS (delayed auto-shift) for fast horizontal movement
+- DAS (delayed auto-shift) with 3 speed settings (Slow/Normal/Fast)
 - Soft drop (+1/row) and hard drop (+2/row) scoring
+- Ghost piece toggle in settings
 
 ### Scoring Systems
-- T-Spin detection (3-corner rule) with bonus multiplier
+- T-Spin detection (3-corner rule) with Single/Double/Triple differentiation
 - Combo system with escalating bonuses (+50 × combo × level)
 - Back-to-back difficult clear tracking (1.5× multiplier)
 - Perfect clear detection (+3000 × level)
 - Cascade chain bonus scoring (Cascade mode)
+- Score popup notifications on line clears
 
-### 8 Game Modes
+### Zone System (Tetris Effect-inspired)
+- Fill the Zone meter by clearing lines (~8 lines to fill)
+- Activate with Q key / left squeeze for 12 seconds of slow-time
+- Lines are banked during Zone and clear all at once on exit
+- Named zone clears: Pentris through DECAHEXATRIS (16 lines)
+- Exponential bonus scoring for zone clears
+- Zone-specific achievements and statistics
+
+### Power-Up System
+- Earn power-ups with combo x3+
+- **Bomb**: Clears bottom 3 rows with screen shake
+- **Laser**: Clears lowest non-empty row with particles
+- **Freeze**: Halves drop speed for 10 seconds
+
+### 12 Game Modes
 - **Marathon** — Endless, level up every 10 lines
-- **Sprint 40** — Clear 40 lines as fast as possible
-- **Ultra** — Score as much as you can in 3 minutes
-- **Survival** — Speed increases constantly, garbage lines spawn periodically
+- **Sprint 40** — Clear 40 lines ASAP (with PB tracking)
+- **Ultra** — Score max in 3 minutes
+- **Survival** — Speed increases + garbage spawns periodically
 - **Zen** — No gravity, place freely
 - **Blitz** — 1 minute, maximum score
 - **Daily Challenge** — Seeded daily puzzle (mulberry32 PRNG)
-- **Cascade** — Cleared blocks trigger gravity cascades with chain reactions
+- **Cascade** — Gravity cascades with chain reactions
+- **Dig** — Clear 8 rows of preset garbage ASAP (with PB tracking)
+- **Battle vs AI** — Survive AI garbage attacks, send counter-attacks
+- **Classic** — NES-style: no hold, no ghost, no wall kicks
+- **⚙ Challenge** — Custom rules: starting level, target lines, time limit, garbage interval
 
 ### 3 Difficulty Levels
 - Easy (slow start), Normal, Hard (fast start)
 
 ### Progression
 - XP/Level system (20 player titles: Novice → NEON GOD)
-- 90 achievements across all systems with paginated viewer
+- 170+ achievements across all systems with paginated viewer
 - Top 20 leaderboard with per-mode filtering
-- Comprehensive career statistics (line clears, combos, T-Spins, perfects, cascades)
+- Comprehensive career statistics (line clears, combos, T-Spins, perfects, cascades, zone stats)
+
+### Performance Tracking
+- PPS (Pieces Per Second)
+- APM (Actions Per Minute)
+- Finesse ratio (move efficiency vs optimal)
+- Sprint and Dig personal best times
 
 ### Customization
-- 10 holodeck themes (Neon, Crimson, Toxic, Ultra Violet, Solar, Deep Sea, Arctic, Midnight, Inferno, Matrix)
-- 10 block skins (Neon, Crystal, Hologram, Plasma, Void, Solar, Retro, Chrome, Nebula, Obsidian)
+- 14 holodeck themes (Neon, Crimson, Toxic, Ultra Violet, Solar, Deep Sea, Arctic, Midnight, Inferno, Matrix, Sakura, Void, Cyber, Horizon)
+- 14 block skins (Neon, Crystal, Hologram, Plasma, Void, Solar, Retro, Chrome, Nebula, Obsidian, Prism, Glitch, Pulse, Frost)
 - Volume controls (master/SFX/music)
 
 ### Visual & Audio
 - 3D board with wall pillars and back panel
 - Holodeck environment (grid floor/ceiling, 14 floating wireframe decorations, 40 ambient particles)
 - Line clear animations with particle bursts
-- Screen shake on Tetris/T-Spin/Perfect Clear/Level Up
+- Hard drop trail VFX particles
+- Lock delay piece flash animation
+- Screen shake on Tetris/T-Spin/Perfect Clear/Level Up/Zone
+- Combo intensity border glow (color shift at high combos)
 - Level-up celebration with sound and visual feedback
-- Board border glow pulse animation
 - Procedural Web Audio: 11+ SFX types
-- Procedural arpeggiator music that evolves with level (4 scales, tempo ramp)
+- Procedural arpeggiator music that evolves with level (4 scales, tempo ramp, wave shape shift)
 - Ambient drone with LFO shimmer
 
 ### Controls
@@ -67,6 +95,7 @@ A feature-rich falling block puzzle game built with IWSDK 0.4.1 for WebXR and br
 | ↑/X | Rotate CW |
 | Z | Rotate CCW |
 | C | Hold piece |
+| Q | Activate Zone |
 | R | Quick restart |
 | Esc | Pause |
 
@@ -76,13 +105,14 @@ A feature-rich falling block puzzle game built with IWSDK 0.4.1 for WebXR and br
 | Right thumbstick L/R | Move piece |
 | Right thumbstick down | Soft drop |
 | Right trigger | Hard drop |
-| A button | Rotate CW |
+| Right A | Rotate CW |
 | Left A | Rotate CCW |
-| B button | Pause |
+| Right B | Pause |
 | Left trigger | Hold piece |
+| Left squeeze | Activate Zone |
 
 ### Technical
-- 17 PanelUI spatial panels (zero HTML DOM overlays)
+- 23 PanelUI spatial panels (zero HTML DOM overlays)
 - Dual input: keyboard + XR controller
 - localStorage persistence with backward-compatible migration
 - Built with IWSDK 0.4.1 (`@iwsdk/core`, PanelUI, Follower, ScreenSpace)

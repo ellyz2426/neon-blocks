@@ -1,0 +1,45 @@
+<container flexDirection="column" alignItems="center" gap={16} padding={20}
+  backgroundColor="#000a15" borderRadius={12} borderWidth={1} borderColor="#00eeff">
+  <text fontSize={20} fontWeight="bold" color="#00eeff">⚙ CHALLENGE CONFIG</text>
+
+  <container flexDirection="row" justifyContent="space-between" width="90%" alignItems="center">
+    <text fontSize={12} color="#88ccff">Start Level:</text>
+    <container flexDirection="row" gap={8} alignItems="center">
+      <text id="btn-ch-lvl-down" fontSize={14} color="#ff4444" cursor="pointer">◀</text>
+      <text id="ch-level" fontSize={14} color="#ffffff" minWidth={30} textAlign="center">1</text>
+      <text id="btn-ch-lvl-up" fontSize={14} color="#44ff44" cursor="pointer">▶</text>
+    </container>
+  </container>
+
+  <container flexDirection="row" justifyContent="space-between" width="90%" alignItems="center">
+    <text fontSize={12} color="#88ccff">Target Lines:</text>
+    <container flexDirection="row" gap={8} alignItems="center">
+      <text id="btn-ch-lines-down" fontSize={14} color="#ff4444" cursor="pointer">◀</text>
+      <text id="ch-lines" fontSize={14} color="#ffffff" minWidth={40} textAlign="center">100</text>
+      <text id="btn-ch-lines-up" fontSize={14} color="#44ff44" cursor="pointer">▶</text>
+    </container>
+  </container>
+
+  <container flexDirection="row" justifyContent="space-between" width="90%" alignItems="center">
+    <text fontSize={12} color="#88ccff">Time Limit:</text>
+    <container flexDirection="row" gap={8} alignItems="center">
+      <text id="btn-ch-time-down" fontSize={14} color="#ff4444" cursor="pointer">◀</text>
+      <text id="ch-time" fontSize={14} color="#ffffff" minWidth={50} textAlign="center">None</text>
+      <text id="btn-ch-time-up" fontSize={14} color="#44ff44" cursor="pointer">▶</text>
+    </container>
+  </container>
+
+  <container flexDirection="row" justifyContent="space-between" width="90%" alignItems="center">
+    <text fontSize={12} color="#88ccff">Garbage:</text>
+    <container flexDirection="row" gap={8} alignItems="center">
+      <text id="btn-ch-garb-down" fontSize={14} color="#ff4444" cursor="pointer">◀</text>
+      <text id="ch-garbage" fontSize={14} color="#ffffff" minWidth={50} textAlign="center">None</text>
+      <text id="btn-ch-garb-up" fontSize={14} color="#44ff44" cursor="pointer">▶</text>
+    </container>
+  </container>
+
+  <container flexDirection="row" gap={24} marginTop={8}>
+    <text id="btn-ch-start" fontSize={16} fontWeight="bold" color="#00ff88" cursor="pointer">▶ START</text>
+    <text id="btn-ch-back" fontSize={16} color="#ff6644" cursor="pointer">✕ BACK</text>
+  </container>
+</container>

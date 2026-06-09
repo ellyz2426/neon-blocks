@@ -91,6 +91,7 @@
   <span class="text">Dig: Clear 8 rows of garbage ASAP</span>
   <span class="text">Battle: Survive AI garbage attacks</span>
   <span class="text">Classic: No hold, no ghost, no wall kicks</span>
+  <span class="text">Challenge: Custom rules (start level, target, time, garbage)</span>
   <span class="section">Power-Ups</span>
   <span class="text">Earn power-ups with combo x3+</span>
   <span class="text">Bomb: Clears bottom 3 rows</span>
@@ -99,6 +100,7 @@
   <span class="section">Performance Stats</span>
   <span class="text">PPS: Pieces placed per second</span>
   <span class="text">APM: Actions (moves/rotations) per minute</span>
+  <span class="text">Finesse: Efficiency ratio (fewer moves = higher)</span>
   <div id="btn-back" class="btn-back" cursor="pointer">
     <span class="back-text">BACK</span>
   </div>
