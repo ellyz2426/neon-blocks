@@ -299,6 +299,53 @@
           "class": "cell"
         },
         "dataUid": "uid-26"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "|"
+        ],
+        "properties": {
+          "id": "hud-target-sep",
+          "class": "sep"
+        },
+        "dataUid": "uid-29"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "TARGET"
+            ],
+            "properties": {
+              "id": "hud-target-label",
+              "class": "label"
+            },
+            "dataUid": "uid-31"
+          },
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
+              "-"
+            ],
+            "properties": {
+              "id": "hud-target",
+              "class": "value"
+            },
+            "dataUid": "uid-32"
+          }
+        ],
+        "properties": {
+          "id": "hud-target-cell",
+          "class": "cell"
+        },
+        "dataUid": "uid-30"
       }
     ],
     "properties": {
@@ -408,7 +455,7 @@
         "column": 0
       },
       "end": {
-        "line": 70,
+        "line": 75,
         "column": 6
       }
     },
@@ -680,6 +727,46 @@
       "end": {
         "line": 68,
         "column": 45
+      }
+    },
+    "uid-29": {
+      "start": {
+        "line": 70,
+        "column": 2
+      },
+      "end": {
+        "line": 70,
+        "column": 48
+      }
+    },
+    "uid-30": {
+      "start": {
+        "line": 71,
+        "column": 2
+      },
+      "end": {
+        "line": 74,
+        "column": 8
+      }
+    },
+    "uid-31": {
+      "start": {
+        "line": 72,
+        "column": 4
+      },
+      "end": {
+        "line": 72,
+        "column": 59
+      }
+    },
+    "uid-32": {
+      "start": {
+        "line": 73,
+        "column": 4
+      },
+      "end": {
+        "line": 73,
+        "column": 48
       }
     }
   }

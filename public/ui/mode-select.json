@@ -298,12 +298,35 @@
             "sourceTag": "span",
             "type": "custom",
             "children": [
+              "⏬ COUNTDOWN"
+            ],
+            "properties": {
+              "class": "btn-text"
+            },
+            "dataUid": "uid-28"
+          }
+        ],
+        "properties": {
+          "id": "btn-countdown",
+          "class": "btn",
+          "cursor": "pointer"
+        },
+        "dataUid": "uid-27"
+      },
+      {
+        "type": "container",
+        "sourceTag": "div",
+        "children": [
+          {
+            "sourceTag": "span",
+            "type": "custom",
+            "children": [
               "BACK"
             ],
             "properties": {
               "class": "back-text"
             },
-            "dataUid": "uid-28"
+            "dataUid": "uid-30"
           }
         ],
         "properties": {
@@ -311,7 +334,7 @@
           "class": "btn btn-back",
           "cursor": "pointer"
         },
-        "dataUid": "uid-27"
+        "dataUid": "uid-29"
       }
     ],
     "properties": {
@@ -464,7 +487,7 @@
         "column": 0
       },
       "end": {
-        "line": 95,
+        "line": 98,
         "column": 6
       }
     },
@@ -735,6 +758,26 @@
       },
       "end": {
         "line": 93,
+        "column": 45
+      }
+    },
+    "uid-29": {
+      "start": {
+        "line": 95,
+        "column": 2
+      },
+      "end": {
+        "line": 97,
+        "column": 8
+      }
+    },
+    "uid-30": {
+      "start": {
+        "line": 96,
+        "column": 4
+      },
+      "end": {
+        "line": 96,
         "column": 39
       }
     }

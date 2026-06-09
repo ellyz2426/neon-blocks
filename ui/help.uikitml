@@ -92,6 +92,7 @@
   <span class="text">Battle: Survive AI garbage attacks</span>
   <span class="text">Classic: No hold, no ghost, no wall kicks</span>
   <span class="text">Challenge: Custom rules (start level, target, time, garbage)</span>
+  <span class="text">Countdown: Start at L20, level drops as you clear, win at L1</span>
   <span class="section">Power-Ups</span>
   <span class="text">Earn power-ups with combo x3+</span>
   <span class="text">Bomb: Clears bottom 3 rows</span>

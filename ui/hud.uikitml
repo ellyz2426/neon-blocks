@@ -68,4 +68,9 @@
     <span class="label">B2B</span>
     <span id="hud-b2b" class="value">-</span>
   </div>
+  <span id="hud-target-sep" class="sep">|</span>
+  <div id="hud-target-cell" class="cell">
+    <span id="hud-target-label" class="label">TARGET</span>
+    <span id="hud-target" class="value">-</span>
+  </div>
 </div>

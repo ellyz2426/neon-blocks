@@ -90,6 +90,9 @@
   <div id="btn-challenge" class="btn" cursor="pointer">
     <span class="btn-text">⚙ CHALLENGE</span>
   </div>
+  <div id="btn-countdown" class="btn" cursor="pointer">
+    <span class="btn-text">⏬ COUNTDOWN</span>
+  </div>
   <div id="btn-back" class="btn btn-back" cursor="pointer">
     <span class="back-text">BACK</span>
   </div>

@@ -513,12 +513,23 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
+          "Countdown: Start at L20, level drops as you clear, win at L1"
+        ],
+        "properties": {
+          "class": "text"
+        },
+        "dataUid": "uid-48"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
           "Power-Ups"
         ],
         "properties": {
           "class": "section"
         },
-        "dataUid": "uid-48"
+        "dataUid": "uid-49"
       },
       {
         "sourceTag": "span",
@@ -529,7 +540,7 @@
         "properties": {
           "class": "text"
         },
-        "dataUid": "uid-49"
+        "dataUid": "uid-50"
       },
       {
         "sourceTag": "span",
@@ -540,7 +551,7 @@
         "properties": {
           "class": "text"
         },
-        "dataUid": "uid-50"
+        "dataUid": "uid-51"
       },
       {
         "sourceTag": "span",
@@ -551,7 +562,7 @@
         "properties": {
           "class": "text"
         },
-        "dataUid": "uid-51"
+        "dataUid": "uid-52"
       },
       {
         "sourceTag": "span",
@@ -562,7 +573,7 @@
         "properties": {
           "class": "text"
         },
-        "dataUid": "uid-52"
+        "dataUid": "uid-53"
       },
       {
         "sourceTag": "span",
@@ -573,7 +584,7 @@
         "properties": {
           "class": "section"
         },
-        "dataUid": "uid-53"
+        "dataUid": "uid-54"
       },
       {
         "sourceTag": "span",
@@ -584,7 +595,7 @@
         "properties": {
           "class": "text"
         },
-        "dataUid": "uid-54"
+        "dataUid": "uid-55"
       },
       {
         "sourceTag": "span",
@@ -595,7 +606,7 @@
         "properties": {
           "class": "text"
         },
-        "dataUid": "uid-55"
+        "dataUid": "uid-56"
       },
       {
         "sourceTag": "span",
@@ -606,7 +617,7 @@
         "properties": {
           "class": "text"
         },
-        "dataUid": "uid-56"
+        "dataUid": "uid-57"
       },
       {
         "type": "container",
@@ -621,7 +632,7 @@
             "properties": {
               "class": "back-text"
             },
-            "dataUid": "uid-58"
+            "dataUid": "uid-59"
           }
         ],
         "properties": {
@@ -629,7 +640,7 @@
           "class": "btn-back",
           "cursor": "pointer"
         },
-        "dataUid": "uid-57"
+        "dataUid": "uid-58"
       }
     ],
     "properties": {
@@ -767,7 +778,7 @@
         "column": 0
       },
       "end": {
-        "line": 106,
+        "line": 107,
         "column": 6
       }
     },
@@ -1238,7 +1249,7 @@
       },
       "end": {
         "line": 94,
-        "column": 40
+        "column": 88
       }
     },
     "uid-49": {
@@ -1248,7 +1259,7 @@
       },
       "end": {
         "line": 95,
-        "column": 57
+        "column": 40
       }
     },
     "uid-50": {
@@ -1258,7 +1269,7 @@
       },
       "end": {
         "line": 96,
-        "column": 54
+        "column": 57
       }
     },
     "uid-51": {
@@ -1268,7 +1279,7 @@
       },
       "end": {
         "line": 97,
-        "column": 62
+        "column": 54
       }
     },
     "uid-52": {
@@ -1278,7 +1289,7 @@
       },
       "end": {
         "line": 98,
-        "column": 64
+        "column": 62
       }
     },
     "uid-53": {
@@ -1288,7 +1299,7 @@
       },
       "end": {
         "line": 99,
-        "column": 48
+        "column": 64
       }
     },
     "uid-54": {
@@ -1298,7 +1309,7 @@
       },
       "end": {
         "line": 100,
-        "column": 57
+        "column": 48
       }
     },
     "uid-55": {
@@ -1308,7 +1319,7 @@
       },
       "end": {
         "line": 101,
-        "column": 69
+        "column": 57
       }
     },
     "uid-56": {
@@ -1318,7 +1329,7 @@
       },
       "end": {
         "line": 102,
-        "column": 76
+        "column": 69
       }
     },
     "uid-57": {
@@ -1327,17 +1338,27 @@
         "column": 2
       },
       "end": {
-        "line": 105,
-        "column": 8
+        "line": 103,
+        "column": 76
       }
     },
     "uid-58": {
       "start": {
         "line": 104,
+        "column": 2
+      },
+      "end": {
+        "line": 106,
+        "column": 8
+      }
+    },
+    "uid-59": {
+      "start": {
+        "line": 105,
         "column": 4
       },
       "end": {
-        "line": 104,
+        "line": 105,
         "column": 39
       }
     }

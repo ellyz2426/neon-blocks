@@ -54,12 +54,44 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
+          "-"
+        ],
+        "properties": {
+          "id": "next-4",
+          "class": "piece-name",
+          "style": {
+            "fontSize": "1.3",
+            "color": "#006688"
+          }
+        },
+        "dataUid": "uid-6"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "-"
+        ],
+        "properties": {
+          "id": "next-5",
+          "class": "piece-name",
+          "style": {
+            "fontSize": "1.3",
+            "color": "#006688"
+          }
+        },
+        "dataUid": "uid-7"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
           "HOLD"
         ],
         "properties": {
           "class": "hold-label"
         },
-        "dataUid": "uid-6"
+        "dataUid": "uid-8"
       },
       {
         "sourceTag": "span",
@@ -71,7 +103,7 @@
           "id": "hold-piece",
           "class": "hold-name"
         },
-        "dataUid": "uid-7"
+        "dataUid": "uid-9"
       }
     ],
     "properties": {
@@ -181,7 +213,7 @@
         "column": 0
       },
       "end": {
-        "line": 42,
+        "line": 44,
         "column": 6
       }
     },
@@ -232,7 +264,7 @@
       },
       "end": {
         "line": 40,
-        "column": 38
+        "column": 87
       }
     },
     "uid-7": {
@@ -242,6 +274,26 @@
       },
       "end": {
         "line": 41,
+        "column": 87
+      }
+    },
+    "uid-8": {
+      "start": {
+        "line": 42,
+        "column": 2
+      },
+      "end": {
+        "line": 42,
+        "column": 38
+      }
+    },
+    "uid-9": {
+      "start": {
+        "line": 43,
+        "column": 2
+      },
+      "end": {
+        "line": 43,
         "column": 50
       }
     }

@@ -10,7 +10,7 @@ import {
 
 // ─── TYPES & CONSTANTS ───────────────────────────────────────────────
 type GameState = 'title' | 'modeSelect' | 'difficulty' | 'countdown' | 'playing' | 'paused' | 'gameOver' | 'leaderboard' | 'achievements' | 'stats' | 'settings' | 'help' | 'skins' | 'challengeConfig';
-type GameMode = 'marathon' | 'sprint' | 'ultra' | 'survival' | 'zen' | 'blitz' | 'daily' | 'cascade' | 'dig' | 'battle' | 'classic' | 'challenge';
+type GameMode = 'marathon' | 'sprint' | 'ultra' | 'survival' | 'zen' | 'blitz' | 'daily' | 'cascade' | 'dig' | 'battle' | 'classic' | 'challenge' | 'countdown';
 
 function fmtNum(n: number): string {
   return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -326,6 +326,23 @@ const ACHIEVEMENTS: Achievement[] = [
 
   // Lock delay mastery
   { id: 'lock_reset_10', name: 'Lock Juggler', desc: '10+ lock resets in one piece' },
+
+  // Countdown mode
+  { id: 'countdown_clear', name: 'Countdown Victor', desc: 'Win a Countdown game' },
+  { id: 'countdown_5', name: 'Countdown Veteran', desc: 'Win 5 Countdown games' },
+  { id: 'countdown_fast', name: 'Speed Descender', desc: 'Win Countdown under 3 minutes' },
+
+  // Mega milestones
+  { id: 'games_1000', name: 'Legendary Player', desc: 'Play 1,000 games' },
+  { id: 'pieces_50000', name: 'Infinite Architect', desc: 'Place 50,000 pieces total' },
+  { id: 'score_50m', name: 'Fifty Million', desc: 'Score 50,000,000 total' },
+  { id: 'b2b_20', name: 'Back-to-Back Legend', desc: '20 consecutive difficult clears' },
+  { id: 'perfect_25', name: 'Perfect Master', desc: '25 perfect clears total' },
+  { id: 'zone_50', name: 'Zone Veteran', desc: 'Activate Zone 50 times total' },
+  { id: 'all_13_modes', name: 'Mode Maniac', desc: 'Play all 13 game modes' },
+  { id: 'playtime_24h', name: 'One Full Day', desc: 'Play for 24 hours total' },
+  { id: 'tspin_100', name: 'T-Spin Infinity', desc: '100 T-Spins total' },
+  { id: 'lines_25000', name: 'Line Transcendent', desc: 'Clear 25,000 lines total' },
 ];
 
 // ─── SAVE DATA ─────────────────────────────────────────────────────
@@ -464,6 +481,23 @@ class AudioManager {
   }
 
   battleHit() { this.playTone(180, 'square', 0.2, 0.1); }
+
+  zoneActivate() {
+    this.ensure();
+    // Rising sweep + power chord
+    [330, 440, 550, 660, 880, 1100, 1320].forEach((f, i) => setTimeout(() => this.playTone(f, 'sine', 0.3, 0.15), i * 40));
+  }
+
+  zoneDeactivate() {
+    this.ensure();
+    // Descending wave
+    [880, 660, 550, 440, 330].forEach((f, i) => setTimeout(() => this.playTone(f, 'triangle', 0.25, 0.12), i * 50));
+  }
+
+  countdownLevelDown() {
+    this.ensure();
+    [660, 550, 440, 330].forEach((f, i) => setTimeout(() => this.playTone(f, 'sine', 0.2, 0.12), i * 60));
+  }
 
   updateLevel(level: number) { this.currentArpLevel = level; }
 
@@ -948,6 +982,10 @@ async function main() {
   let gameActualMoves = 0;
   let gamesWithGoodFinesse = 0;
 
+  // Countdown mode state
+  let countdownWins = 0;
+  let countdownStartLevel = 20;
+
   // Visual: hard drop trail
   interface DropTrail { mesh: Mesh; life: number; }
   const dropTrails: DropTrail[] = [];
@@ -1341,6 +1379,22 @@ async function main() {
           audio.updateLevel(gameLevel);
         }
       }
+
+      // Countdown mode: level decreases every 10 lines cleared
+      if (gameMode === 'countdown') {
+        const levelsDown = Math.floor(gameLines / 10);
+        const newLevel = Math.max(1, countdownStartLevel - levelsDown);
+        if (newLevel < gameLevel) {
+          gameLevel = newLevel;
+          audio.updateLevel(gameLevel);
+          audio.countdownLevelDown();
+          showLevelUp(gameLevel); // Re-use level-up display to show new level
+          if (gameLevel <= 1) {
+            // Win condition!
+            digWon = true;
+          }
+        }
+      }
     } else {
       gameCombo = -1;
       // Perfect clear check
@@ -1415,6 +1469,13 @@ async function main() {
 
     // Dig: check win (all garbage cleared)
     if (gameMode === 'dig' && digWon) {
+      audio.digWin();
+      endGame();
+      return;
+    }
+
+    // Countdown: check win (level reached 1)
+    if (gameMode === 'countdown' && digWon) {
       audio.digWin();
       endGame();
       return;
@@ -1567,7 +1628,7 @@ async function main() {
     if (save.stats.zoneActivations >= 10) checkAchievement('zone_10');
     if (save.stats.zoneActivations >= 25) checkAchievement('zone_25');
 
-    audio.powerUp();
+    audio.zoneActivate();
     showLineClearText('⚡ ZONE ⚡');
     triggerShake(0.01, 0.3);
 
@@ -1582,6 +1643,7 @@ async function main() {
   function deactivateZone() {
     if (!zoneActive) return;
     zoneActive = false;
+    audio.zoneDeactivate();
 
     // Score: all zone lines clear simultaneously
     if (zoneLinesCleared > 0) {
@@ -1804,11 +1866,13 @@ async function main() {
   }
 
   function updateNextHoldVisuals() {
-    while (nextQueue.length < 4) nextQueue.push(...generateBag());
+    while (nextQueue.length < 7) nextQueue.push(...generateBag());
     while (nextGroup.children.length) nextGroup.remove(nextGroup.children[0]);
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 5; i++) {
       const previewG = new Group();
-      previewG.position.set(0, -i * CELL * 3.5, 0);
+      previewG.position.set(0, -i * CELL * 3, 0);
+      const scale = i >= 3 ? 0.7 : 1;
+      previewG.scale.set(scale, scale, scale);
       drawPreviewPiece(previewG, nextQueue[i]);
       nextGroup.add(previewG);
     }
@@ -1967,7 +2031,7 @@ async function main() {
 
   // ─── LEADERBOARD ──────────────────────────────────────────────
   let lbFilterMode: string = 'ALL';
-  const lbModes = ['ALL', 'marathon', 'sprint', 'ultra', 'survival', 'zen', 'blitz', 'daily', 'cascade', 'dig', 'battle', 'classic', 'challenge'];
+  const lbModes = ['ALL', 'marathon', 'sprint', 'ultra', 'survival', 'zen', 'blitz', 'daily', 'cascade', 'dig', 'battle', 'classic', 'challenge', 'countdown'];
   let lbModeIdx = 0;
 
   function updateLeaderboardPanel() {
@@ -2047,14 +2111,30 @@ async function main() {
     setText('hud-time', `${mins}:${(secs % 60).toString().padStart(2, '0')}`);
     setText('hud-mode', gameMode.toUpperCase());
     setText('hud-b2b', backToBack > 0 ? `x${backToBack}` : '-');
+
+    // Target indicator for mode-specific goals
+    let targetLabel = ''; let targetVal = '';
+    if (gameMode === 'sprint') { targetLabel = 'LEFT'; targetVal = `${Math.max(0, 40 - gameLines)}`; }
+    else if (gameMode === 'dig') { targetLabel = 'DIG'; targetVal = digWon ? 'DONE' : 'CLEAR'; }
+    else if (gameMode === 'countdown') { targetLabel = 'TO LV'; targetVal = `${gameLevel}`; }
+    else if (gameMode === 'challenge' && challengeConfig.targetLines > 0) { targetLabel = 'LEFT'; targetVal = `${Math.max(0, challengeConfig.targetLines - gameLines)}`; }
+    else if (gameMode === 'challenge' && challengeConfig.timeLimitSec > 0) {
+      const remain = Math.max(0, Math.ceil((challengeConfig.timeLimitSec * 1000 - gameTimeMs) / 1000));
+      targetLabel = 'TIME'; targetVal = `${Math.floor(remain / 60)}:${(remain % 60).toString().padStart(2, '0')}`;
+    }
+    else if (gameMode === 'ultra') { const remain = Math.max(0, Math.ceil((180000 - gameTimeMs) / 1000)); targetLabel = 'LEFT'; targetVal = `${Math.floor(remain / 60)}:${(remain % 60).toString().padStart(2, '0')}`; }
+    else if (gameMode === 'blitz') { const remain = Math.max(0, Math.ceil((60000 - gameTimeMs) / 1000)); targetLabel = 'LEFT'; targetVal = `${remain}s`; }
+    else if (gameMode === 'battle') { targetLabel = 'SENT'; targetVal = `${battleGarbageSent}`; }
+    setText('hud-target-label', targetLabel);
+    setText('hud-target', targetVal || '-');
   }
 
   function updateNextHoldPanel() {
     const entity = panelEntities.get('nextHold')!;
     const doc = entity.getValue(PanelDocument, 'document') as UIKitDocument | undefined;
     if (!doc) return;
-    while (nextQueue.length < 4) nextQueue.push(...generateBag());
-    for (let i = 0; i < 3; i++) {
+    while (nextQueue.length < 7) nextQueue.push(...generateBag());
+    for (let i = 0; i < 5; i++) {
       const el = doc.getElementById(`next-${i + 1}`);
       if (el) el.text.value = nextQueue[i] || '-';
     }
@@ -2120,6 +2200,13 @@ async function main() {
     // Challenge mode: apply config overrides
     if (gameMode === 'challenge') {
       gameLevel = challengeConfig.startLevel;
+      prevGameLevel = gameLevel;
+      audio.updateLevel(gameLevel);
+    }
+
+    // Countdown mode: start at level 20, level decreases as lines clear
+    if (gameMode === 'countdown') {
+      gameLevel = countdownStartLevel;
       prevGameLevel = gameLevel;
       audio.updateLevel(gameLevel);
     }
@@ -2314,6 +2401,14 @@ async function main() {
       if (challengesClear >= 10) checkAchievement('challenge_10');
     }
 
+    // Countdown mode achievements
+    if (gameMode === 'countdown' && digWon) {
+      countdownWins++;
+      checkAchievement('countdown_clear');
+      if (countdownWins >= 5) checkAchievement('countdown_5');
+      if (gameTimeMs < 180000) checkAchievement('countdown_fast');
+    }
+
     // Advanced milestone achievements
     if (gameMode === 'marathon' && gameLines >= 300) checkAchievement('marathon_300');
     if (gameMode === 'survival' && gameLevel >= 25) checkAchievement('survival_25');
@@ -2340,6 +2435,18 @@ async function main() {
 
     // Lock reset achievement
     if (lockResets >= 10) checkAchievement('lock_reset_10');
+
+    // Mega milestone achievements
+    if (save.stats.games >= 1000) checkAchievement('games_1000');
+    if (save.stats.piecesPlaced >= 50000) checkAchievement('pieces_50000');
+    if (save.stats.totalScore >= 50000000) checkAchievement('score_50m');
+    if (backToBack >= 20) checkAchievement('b2b_20');
+    if (save.stats.perfectClears >= 25) checkAchievement('perfect_25');
+    if (save.stats.zoneActivations >= 50) checkAchievement('zone_50');
+    if (save.stats.modesPlayed.length >= 13) checkAchievement('all_13_modes');
+    if (save.stats.playTimeMs >= 86400000) checkAchievement('playtime_24h');
+    if (save.stats.tspins >= 100) checkAchievement('tspin_100');
+    if (save.stats.totalLines >= 25000) checkAchievement('lines_25000');
 
     writeSave(save);
 
@@ -2410,7 +2517,7 @@ async function main() {
   wireButton('title', 'btn-help', () => { gameState = 'help'; showPanel('help'); });
 
   // Mode select
-  const modes: [string, GameMode][] = [['btn-marathon', 'marathon'], ['btn-sprint', 'sprint'], ['btn-ultra', 'ultra'], ['btn-survival', 'survival'], ['btn-zen', 'zen'], ['btn-blitz', 'blitz'], ['btn-daily', 'daily'], ['btn-cascade', 'cascade'], ['btn-dig', 'dig'], ['btn-battle', 'battle'], ['btn-classic', 'classic']];
+  const modes: [string, GameMode][] = [['btn-marathon', 'marathon'], ['btn-sprint', 'sprint'], ['btn-ultra', 'ultra'], ['btn-survival', 'survival'], ['btn-zen', 'zen'], ['btn-blitz', 'blitz'], ['btn-daily', 'daily'], ['btn-cascade', 'cascade'], ['btn-dig', 'dig'], ['btn-battle', 'battle'], ['btn-classic', 'classic'], ['btn-countdown', 'countdown']];
   for (const [btnId, mode] of modes) {
     wireButton('modeSelect', btnId, () => { gameMode = mode; gameState = 'difficulty'; showPanel('difficulty'); });
   }
